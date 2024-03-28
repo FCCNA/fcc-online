@@ -1,0 +1,1111 @@
+[/Experiment]
+ODB timeout = INT32 : 10000
+Protect ODB = BOOL : n
+Enable core dumps = BOOL : n
+
+[/Experiment/Security]
+Enable non-localhost RPC = BOOL : n
+
+[/Experiment/Security/RPC ports]
+ODBEdit = UINT32 : 0
+mhttpd = UINT32 : 0
+Tektronix Frontend = UINT32 : 0
+Logger = UINT32 : 0
+msysmon = UINT32 : 0
+Sequencer = UINT32 : 0
+
+[/Experiment/Security/RPC hosts]
+Allowed hosts = STRING[10] :
+[256] localhost
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+
+[/Experiment/Security]
+Disable RPC hosts check = BOOL : n
+
+[/Experiment/Buffer sizes]
+SYSMSG = UINT32 : 100000
+SYSTEM = UINT32 : 33554432
+
+[/Experiment]
+MAX_EVENT_SIZE = UINT32 : 4194304
+Name = STRING : [4] fcc
+Pause-Resume Buttons = BOOL : n
+
+[/Experiment/Menu]
+Status = BOOL : y
+Start = BOOL : n
+Transition = BOOL : y
+ODB = BOOL : y
+OldODB = BOOL : n
+Messages = BOOL : y
+Chat = BOOL : y
+Elog = BOOL : y
+Alarms = BOOL : y
+Programs = BOOL : y
+Buffers = BOOL : y
+History = BOOL : y
+OldHistory = BOOL : n
+MSCB = BOOL : y
+Sequencer = BOOL : y
+Event Dump = BOOL : y
+Config = BOOL : y
+Example = BOOL : n
+Help = BOOL : y
+
+[/Experiment]
+Resources = STRING : [1] 
+Prevent start on alarms = BOOL : n
+Prevent start on required progs = BOOL : n
+Transition debug flag = INT32 : 0
+Transition connect timeout = INT32 : 10000
+Transition timeout = INT32 : 120000
+
+[/System/Clients/736034]
+Name = STRING : [32] mhttpd
+Host = STRING : [256] localhost
+Hardware type = INT32 : 44
+Server Port = INT32 : 38217
+
+[/System/Clients/736182]
+Name = STRING : [32] ODBEdit
+Host = STRING : [256] localhost
+Hardware type = INT32 : 44
+Server Port = INT32 : 35647
+
+[/System]
+Client Notify = INT32 : 0
+
+[/System/Buffers/SYSMSG]
+Size = DOUBLE : 100000
+Write pointer = DOUBLE : 680
+Read pointer = DOUBLE : 0
+Filled = DOUBLE : 680
+Filled pct = DOUBLE : 0.6799999999999999
+
+[/System/Buffers/SYSMSG/Clients/ODBEdit]
+count_lock = INT32 : 66
+count_sent = INT32 : 0
+bytes_sent = DOUBLE : 0
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 680
+bytes_used = DOUBLE : 0
+pct_used = DOUBLE : 0
+last_updated = UINT32 : 2254209165
+
+[/System/Buffers/SYSMSG/Clients/mhttpd]
+count_lock = INT32 : 3015
+count_sent = INT32 : 0
+bytes_sent = DOUBLE : 0
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 0
+bytes_used = DOUBLE : 680
+pct_used = DOUBLE : 0.6799999999999999
+last_updated = UINT32 : 2254209374
+
+[/System/Buffers/SYSMSG/Clients/Tektronix Frontend]
+count_lock = INT32 : 432
+count_sent = INT32 : 0
+bytes_sent = DOUBLE : 0
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 8864
+bytes_used = DOUBLE : 10464
+pct_used = DOUBLE : 10.464
+last_updated = UINT32 : 1733671605
+
+[/System/Buffers/SYSMSG/Clients/Logger]
+count_lock = INT32 : 197
+count_sent = INT32 : 1
+bytes_sent = DOUBLE : 64
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 616
+bytes_used = DOUBLE : 64
+pct_used = DOUBLE : 0.064
+last_updated = UINT32 : 2254051573
+
+[/System/Buffers/SYSMSG/Clients/msysmon]
+count_lock = INT32 : 219
+count_sent = INT32 : 0
+bytes_sent = DOUBLE : 0
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 680
+bytes_used = DOUBLE : 0
+pct_used = DOUBLE : 0
+last_updated = UINT32 : 2254051049
+
+[/System/Buffers/SYSMSG/Clients/Sequencer]
+count_lock = INT32 : 106
+count_sent = INT32 : 0
+bytes_sent = DOUBLE : 0
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 680
+bytes_used = DOUBLE : 0
+pct_used = DOUBLE : 0
+last_updated = UINT32 : 2254106912
+
+[/System/Buffers/SYSMSG]
+Last updated = UINT32 : 2254209374
+
+[/System/Buffers/SYSTEM]
+Size = DOUBLE : 33554432
+Write pointer = DOUBLE : 5544
+Read pointer = DOUBLE : 0
+Filled = DOUBLE : 5544
+Filled pct = DOUBLE : 0.01652240753173828
+
+[/System/Buffers/SYSTEM/Clients/Tektronix Frontend]
+count_lock = INT32 : 873
+count_sent = INT32 : 446
+bytes_sent = DOUBLE : 111539248
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 1706504
+bytes_used = DOUBLE : 33511792
+pct_used = DOUBLE : 99.87292289733887
+last_updated = UINT32 : 1733671605
+
+[/System/Buffers/SYSTEM/Clients/mhttpd]
+count_lock = INT32 : 4039
+count_sent = INT32 : 0
+bytes_sent = DOUBLE : 0
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 166
+bytes_read = DOUBLE : 45392448
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 1706504
+bytes_used = DOUBLE : 33511792
+pct_used = DOUBLE : 99.87292289733887
+last_updated = UINT32 : 1733676070
+
+[/System/Buffers/SYSTEM/Clients/msysmon]
+count_lock = INT32 : 223
+count_sent = INT32 : 9
+bytes_sent = DOUBLE : 5544
+count_write_wait = INT32 : 0
+time_write_wait = UINT32 : 0
+max_bytes_write_wait = INT32 : 0
+count_read = INT32 : 0
+bytes_read = DOUBLE : 0
+get_all_flag = BOOL : n
+read_pointer = DOUBLE : 0
+bytes_used = DOUBLE : 5544
+pct_used = DOUBLE : 0.01652240753173828
+last_updated = UINT32 : 2254051049
+
+[/System/Buffers/SYSTEM]
+Last updated = UINT32 : 2254051049
+
+[/System]
+Prompt = STRING : [256] [%h:%e:%s]%p>
+
+[/System/Flush]
+Flush period = UINT32 : 60
+Last flush = UINT32 : 1711651143
+
+[/System/Transition]
+transition = INT32 : 2
+run_number = INT32 : 1
+start_time = UINT32 : 1733613802
+end_time = UINT32 : 1733613950
+status = INT32 : 1
+error = STRING : [8] Success
+deferred = STRING : [1] 
+
+[/System/Transition/Clients/Tektronix Frontend_500]
+sequence_number = INT32 : 500
+client_name = STRING : [19] Tektronix Frontend
+host_name = STRING : [10] localhost
+port = INT32 : 43487
+init_time = UINT32 : 1733613802
+waiting_for_client = STRING : [1] 
+connect_timeout = UINT32 : 10000
+connect_start_time = UINT32 : 1733613802
+connect_end_time = UINT32 : 1733613802
+rpc_timeout = UINT32 : 120000
+rpc_start_time = UINT32 : 1733613802
+rpc_end_time = UINT32 : 1733613950
+end_time = UINT32 : 1733613950
+status = INT32 : 1
+error = STRING : [1] 
+last_updated = UINT32 : 1733613950
+
+[/Programs/ODBEdit]
+Required = BOOL : n
+Watchdog timeout = INT32 : 10000
+Check interval = UINT32 : 180000
+Start command = STRING : [256] 
+Auto start = BOOL : n
+Auto stop = BOOL : n
+Auto restart = BOOL : n
+Alarm class = STRING : [32] 
+First failed = UINT32 : 0
+
+[/Programs/mhttpd]
+Required = BOOL : n
+Watchdog timeout = INT32 : 10000
+Check interval = UINT32 : 180000
+Start command = STRING : [256] 
+Auto start = BOOL : n
+Auto stop = BOOL : n
+Auto restart = BOOL : n
+Alarm class = STRING : [32] 
+First failed = UINT32 : 0
+
+[/Programs/Tektronix Frontend]
+Required = BOOL : n
+Watchdog timeout = INT32 : 10000
+Check interval = UINT32 : 180000
+Start command = STRING : [256] 
+Auto start = BOOL : n
+Auto stop = BOOL : n
+Auto restart = BOOL : n
+Alarm class = STRING : [32] 
+First failed = UINT32 : 1711650016
+
+[/Programs]
+Execute on start run = STRING : [256] 
+Execute on start abort = STRING : [256] 
+Execute on stop run = STRING : [256] 
+
+[/Programs/Logger]
+Required = BOOL : y
+Watchdog timeout = INT32 : 10000
+Check interval = UINT32 : 180000
+Start command = STRING : [256] mlogger -D
+Auto start = BOOL : n
+Auto stop = BOOL : n
+Auto restart = BOOL : n
+Alarm class = STRING : [32] 
+First failed = UINT32 : 1711651041
+
+[/Programs/msysmon]
+Required = BOOL : y
+Watchdog timeout = INT32 : 10000
+Check interval = UINT32 : 180000
+Start command = STRING : [256] msysmon -D
+Auto start = BOOL : n
+Auto stop = BOOL : n
+Auto restart = BOOL : n
+Alarm class = STRING : [32] 
+First failed = UINT32 : 1711651041
+
+[/Programs/Sequencer]
+Required = BOOL : y
+Watchdog timeout = INT32 : 10000
+Check interval = UINT32 : 180000
+Start command = STRING : [256] msequencer -D
+Auto start = BOOL : y
+Auto stop = BOOL : n
+Auto restart = BOOL : n
+Alarm class = STRING : [32] 
+First failed = UINT32 : 1711651099
+
+[/Logger]
+Data dir = STRING : [18] /data
+Message file date format = STRING : [1] 
+Message dir = STRING : [15] /data/messages
+History dir = STRING : [14] /data/history
+Write data = BOOL : y
+ODB Dump = BOOL : n
+ODB Dump File = STRING : [256] run%05d.json
+ODB Last Dump File = STRING : [256] last.json
+Auto restart = BOOL : n
+Auto restart delay = INT32 : 0
+Tape message = BOOL : y
+
+[/Logger/Channels/0/Settings]
+Active = BOOL : y
+Type = STRING : [8] Disk
+Filename = STRING : [256] run%05d.mid
+Format = STRING : [8] MIDAS
+Compression = INT32 : 0
+ODB dump = BOOL : y
+ODB dump format = STRING : [32] json
+Options ODB dump format = STRING[3] :
+[32] odb
+[32] xml
+[32] json
+Log messages = UINT32 : 0
+Buffer = STRING : [32] SYSTEM
+Event ID = INT32 : -1
+Trigger mask = INT32 : -1
+Event limit = DOUBLE : 0
+Byte limit = DOUBLE : 0
+Subrun Byte limit = DOUBLE : 0
+Tape capacity = DOUBLE : 0
+Subdir format = STRING : [32] 
+Current filename = STRING : [256] 
+Data checksum = STRING : [256] NONE
+Options Data checksum = STRING[5] :
+[32] NONE
+[32] CRC32C
+[32] SHA256
+[32] SHA512
+[32] ZLIB
+File checksum = STRING : [256] NONE
+Options File checksum = STRING[5] :
+[32] NONE
+[32] CRC32C
+[32] SHA256
+[32] SHA512
+[32] ZLIB
+Compress = STRING : [256] lz4
+Options Compress = STRING[5] :
+[32] none
+[32] gzip
+[32] lz4
+[32] bzip2
+[32] pbzip2
+Output = STRING : [256] FILE
+Options Output = STRING[5] :
+[32] NULL
+[32] FILE
+[32] FTP
+[32] ROOT
+[32] PIPE
+Gzip compression = UINT32 : 0
+Bzip2 compression = UINT32 : 0
+Pbzip2 num cpu = UINT32 : 0
+Pbzip2 compression = UINT32 : 0
+Pbzip2 options = STRING : [256] 
+
+[/Logger/Channels/0/Statistics]
+Events written = DOUBLE : 0
+Bytes written = DOUBLE : 0
+Bytes written uncompressed = DOUBLE : 0
+Bytes written total = DOUBLE : 0
+Bytes written subrun = DOUBLE : 0
+Files written = DOUBLE : 0
+Disk level = DOUBLE : 0
+
+[/Logger/Runlog/SQL]
+Create database = BOOL : n
+Write data = BOOL : n
+Hostname = STRING : [80] localhost
+Username = STRING : [80] root
+Password = STRING : [80] 
+Database = STRING : [4] fcc
+Table = STRING : [80] Runlog
+Logfile = STRING : [80] sql.log
+
+[/Logger/Runlog/SQL/Links BOR]
+Run number = LINK : [20] /Runinfo/Run number
+Start time = LINK : [20] /Runinfo/Start time
+
+[/Logger/Runlog/SQL/Links EOR]
+Stop time = LINK : [19] /Runinfo/Stop time
+Number of events = LINK : [42] /Equipment/Trigger/Statistics/Events sent
+
+[/Logger/Runlog/ASCII]
+Write data = BOOL : n
+Filename = STRING : [80] runlog.log
+
+[/Logger/Runlog/ASCII/Links BOR]
+Run number = LINK : [20] /Runinfo/Run number
+Start time = LINK : [20] /Runinfo/Start time
+
+[/Logger/Runlog/ASCII/Links EOR]
+Stop time = LINK : [19] /Runinfo/Stop time
+Number of events = LINK : [42] /Equipment/Trigger/Statistics/Events sent
+
+[/Logger/Runlog/JSON]
+Write data = BOOL : n
+Subdir = STRING : [80] runlogs
+
+[/Logger/Runlog/JSON/Links BOR]
+Run number = LINK : [20] /Runinfo/Run number
+Start time = LINK : [20] /Runinfo/Start time
+
+[/Logger/Runlog/JSON/Links EOR]
+Stop time = LINK : [19] /Runinfo/Stop time
+Number of events = LINK : [42] /Equipment/Trigger/Statistics/Events sent
+
+[/Logger/History/FILE]
+Type = STRING : [5] FILE
+Active = BOOL : y
+Debug = INT32 : 0
+PerVariableHistory = INT32 : 1
+History dir = STRING : [1] 
+
+[/Logger/History/MIDAS]
+Type = STRING : [6] MIDAS
+Active = BOOL : n
+Debug = INT32 : 0
+History dir = STRING : [1] 
+
+[/Logger/History/ODBC]
+Type = STRING : [5] ODBC
+Active = BOOL : n
+Debug = INT32 : 0
+Writer_ODBC_DSN = STRING : [15] history_writer
+Reader_ODBC_DSN = STRING : [15] history_reader
+
+[/Logger/History/SQLITE]
+Type = STRING : [7] SQLITE
+Active = BOOL : n
+Debug = INT32 : 0
+History dir = STRING : [1] 
+
+[/Logger/History/MYSQL]
+Type = STRING : [6] MYSQL
+Active = BOOL : n
+Debug = INT32 : 0
+MYSQL Writer = STRING : [17] mysql_writer.txt
+MYSQL Reader = STRING : [17] mysql_reader.txt
+
+[/Logger/History/PGSQL]
+Type = STRING : [6] PGSQL
+Active = BOOL : n
+Debug = INT32 : 0
+PGSQL Writer = STRING : [17] pgsql_writer.txt
+PGSQL Reader = STRING : [17] pgsql_reader.txt
+Enable downsampling queries = BOOL : n
+
+[/Logger]
+Run duration = UINT32 : 0
+
+[/Runinfo]
+State = INT32 : 1
+Online Mode = INT32 : 1
+Run number = INT32 : 1
+Transition in progress = INT32 : 0
+Start abort = INT32 : 0
+Requested transition = INT32 : 0
+Start time = STRING : [32] Fri Mar 22 19:02:04 2024
+Start time binary = UINT32 : 1711130524
+Stop time = STRING : [32] Fri Mar 22 19:03:17 2024
+Stop time binary = UINT32 : 1711130597
+
+[/Alarms]
+Alarm system active = BOOL : y
+
+[/Alarms/Alarms/Demo ODB]
+Active = BOOL : n
+Triggered = INT32 : 0
+Type = INT32 : 3
+Check interval = INT32 : 60
+Checked last = UINT32 : 0
+Time triggered first = STRING : [32] 
+Time triggered last = STRING : [32] 
+Condition = STRING : [256] /Runinfo/Run number > 100
+Alarm Class = STRING : [32] Alarm
+Alarm Message = STRING : [80] Run number became too large
+
+[/Alarms/Alarms/Demo periodic]
+Active = BOOL : n
+Triggered = INT32 : 0
+Type = INT32 : 4
+Check interval = INT32 : 28800
+Checked last = UINT32 : 1711110350
+Time triggered first = STRING : [32] 
+Time triggered last = STRING : [32] 
+Condition = STRING : [256] 
+Alarm Class = STRING : [32] Warning
+Alarm Message = STRING : [80] Please do your shift checks
+
+[/Alarms/Classes/Alarm]
+Write system message = BOOL : y
+Write Elog message = BOOL : n
+System message interval = INT32 : 60
+System message last = UINT32 : 0
+Execute command = STRING : [256] 
+Execute interval = INT32 : 0
+Execute last = UINT32 : 0
+Stop run = BOOL : n
+Display BGColor = STRING : [32] red
+Display FGColor = STRING : [32] black
+
+[/Alarms/Classes/Warning]
+Write system message = BOOL : y
+Write Elog message = BOOL : n
+System message interval = INT32 : 60
+System message last = UINT32 : 0
+Execute command = STRING : [256] 
+Execute interval = INT32 : 0
+Execute last = UINT32 : 0
+Stop run = BOOL : n
+Display BGColor = STRING : [32] red
+Display FGColor = STRING : [32] black
+
+[/Elog]
+External Elog = BOOL : n
+URL = STRING : [1] 
+Allow delete = BOOL : n
+Allow edit = BOOL : n
+Buttons = STRING[3] :
+[32] 8h
+[32] 24h
+[32] 7d
+Types = STRING[20] :
+[32] Routine
+[32] Shift summary
+[32] Minor error
+[32] Severe error
+[32] Fix
+[32] Question
+[32] Info
+[32] Modification
+[32] Reply
+[32] Alarm
+[32] Test
+[32] Other
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+Systems = STRING[20] :
+[32] General
+[32] DAQ
+[32] Detector
+[32] Electronics
+[32] Target
+[32] Beamline
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+[32] 
+
+[/WebServer]
+Enable localhost port = BOOL : n
+localhost port = INT32 : 8080
+localhost port passwords = BOOL : n
+Enable insecure port = BOOL : y
+insecure port = INT32 : 8080
+insecure port passwords = BOOL : n
+insecure port host list = BOOL : n
+Enable https port = BOOL : n
+https port = INT32 : 8443
+https port passwords = BOOL : y
+https port host list = BOOL : n
+Host list = STRING[10] :
+[256] localhost
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+[256] 
+Enable IPv6 = BOOL : y
+
+[/WebServer/Proxy]
+example = STRING : [23] #http://localhost:8080
+
+[/WebServer/mime.types]
+.ASC = STRING : [11] text/plain
+.CSS = STRING : [9] text/css
+.CSV = STRING : [9] text/csv
+.HTM = STRING : [10] text/html
+.HTML = STRING : [10] text/html
+.TXT = STRING : [11] text/plain
+.BMP = STRING : [10] image/bmp
+.GIF = STRING : [10] image/gif
+.ICO = STRING : [13] image/x-icon
+.JPEG = STRING : [11] image/jpeg
+.JPG = STRING : [11] image/jpeg
+.PNG = STRING : [10] image/png
+.SVG = STRING : [14] image/svg+xml
+.TIF = STRING : [11] image/tiff
+.TIFF = STRING : [11] image/tiff
+.MID = STRING : [11] audio/midi
+.MP3 = STRING : [11] audio/mpeg
+.OGA = STRING : [10] audio/ogg
+.OGG = STRING : [10] audio/ogg
+.WAV = STRING : [10] audio/wav
+.BIN = STRING : [25] application/octet-stream
+.BZ = STRING : [19] application/x-bzip
+.BZ2 = STRING : [20] application/x-bzip2
+.DOC = STRING : [19] application/msword
+.EPS = STRING : [23] application/postscript
+.GZ = STRING : [17] application/gzip
+.JS = STRING : [23] application/javascript
+.JSON = STRING : [17] application/json
+.MJS = STRING : [23] application/javascript
+.PDF = STRING : [16] application/pdf
+.PHP = STRING : [24] application/x-httpd-php
+.RTF = STRING : [16] application/rtf
+.PS = STRING : [23] application/postscript
+.XLS = STRING : [22] application/x-msexcel
+.XML = STRING : [16] application/xml
+.ZIP = STRING : [16] application/zip
+.ODP = STRING : [48] application/vnd.oasis.opendocument.presentation
+.ODS = STRING : [47] application/vnd.oasis.opendocument.spreadsheet
+.ODT = STRING : [40] application/vnd.oasis.opendocument.text
+
+[/Equipment/Trigger/Common]
+Event ID = UINT16 : 1
+Trigger mask = UINT16 : 0
+Buffer = STRING : [32] SYSTEM
+Type = INT32 : 256
+Source = INT32 : 0
+Format = STRING : [8] MIDAS
+Enabled = BOOL : y
+Read on = INT32 : 1
+Period = INT32 : 500
+Event limit = DOUBLE : 0
+Num subevents = UINT32 : 0
+Log history = INT32 : 0
+Frontend host = STRING : [32] localhost
+Frontend name = STRING : [32] Tektronix Frontend
+Frontend file name = STRING : [256] /home/fcc/online/frontends/tek_fe/src/tek_fe.cpp
+Status = STRING : [256] Tektronix Frontend@localhost
+Status color = STRING : [32] greenLight
+Hidden = BOOL : n
+Write cache size = INT32 : 0
+
+[/Equipment/Trigger/Statistics]
+Events sent = DOUBLE : 446
+Events per sec. = DOUBLE : 0
+kBytes per sec. = DOUBLE : 0
+
+[/Equipment/pcfcc_msysmon/Common]
+Event ID = UINT16 : 63
+Trigger mask = UINT16 : 0
+Buffer = STRING : [32] SYSTEM
+Type = INT32 : 1
+Source = INT32 : 0
+Format = STRING : [8] MIDAS
+Enabled = BOOL : y
+Read on = INT32 : 511
+Period = INT32 : 10000
+Event limit = DOUBLE : 0
+Num subevents = UINT32 : 0
+Log history = INT32 : 1
+Frontend host = STRING : [32] localhost
+Frontend name = STRING : [32] msysmon
+Frontend file name = STRING : [256] /home/fcc/git/midas/progs/msysmon.cxx
+Status = STRING : [256] msysmon@localhost
+Status color = STRING : [32] greenLight
+Hidden = BOOL : n
+Write cache size = INT32 : 10000000
+
+[/Equipment/pcfcc_msysmon/Variables]
+CPUN = DOUBLE[12] :
+[0] 0.09970089730807577
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+[10] 0
+[11] 0
+CPUU = DOUBLE[12] :
+[0] 0.09970089730807577
+[1] 1.196410767696909
+[2] 0.49800796812749
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+[10] 0.1988071570576541
+[11] 0.099601593625498
+CPUS = DOUBLE[12] :
+[0] 0.1994017946161515
+[1] 0.2991026919242273
+[2] 0.49800796812749
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0.0992063492063492
+[8] 0
+[9] 0
+[10] 0
+[11] 0.099601593625498
+CPUA = DOUBLE[12] :
+[0] 0.2655381296157995
+[1] 1.495513459621137
+[2] 0.9960159362549801
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0.0992063492063492
+[8] 0
+[9] 0
+[10] 0.1988071570576541
+[11] 0.199203187250996
+LOAD = DOUBLE[4] :
+[0] 0.008308408109006314
+[1] 0.1743773653179689
+[2] 0.09961003312497635
+[3] 0.2711903515839096
+NETR = DOUBLE[3] :
+[0] 0.002026503227648359
+[1] 0.2467802767592773
+[2] 0
+NETT = DOUBLE[3] :
+[0] 0.002026503227648359
+[1] 0.0552058946690004
+[2] 0
+MEMP = DOUBLE : 7.630311459287169
+SWAP = DOUBLE : 28.45894488690572
+
+[/Equipment/pcfcc_msysmon/Statistics]
+Events sent = DOUBLE : 9
+Events per sec. = DOUBLE : 0.33
+kBytes per sec. = DOUBLE : 0.203
+
+[/History/Display/Default/Trigger rate]
+Variables = STRING[2] :
+[64] System:Trigger per sec.
+[64] System:Trigger kB per sec.
+Timescale = STRING : [32] 1h
+Show values = BOOL : y
+Show fill = BOOL : y
+Show run markers = BOOL : y
+Label = STRING[2] :
+[32] 
+[32] 
+Colour = STRING[2] :
+[32] #00AAFF
+[32] #FF9000
+Formula = STRING[2] :
+[64] 
+[64] 
+
+[/History/Display/msysmon/localhost]
+Variables = STRING[5] :
+[64] pcfcc_msysmon:LOAD[0]
+[64] pcfcc_msysmon:LOAD[1]
+[64] pcfcc_msysmon:LOAD[2]
+[64] pcfcc_msysmon:MEMP
+[64] pcfcc_msysmon:SWAP
+Label = STRING[5] :
+[32] NICE CPU Load (%)
+[32] USER CPU Load (%)
+[32] SYSTEM CPU Load (%)
+[32] Memory Usage (%)
+[32] Swap Usage (%)
+Colour = STRING[5] :
+[32] #00AAFF
+[32] #FF9000
+[32] #FF00A0
+[32] #00C030
+[32] #A0C0D0
+Timescale = STRING : [3] 1h
+Minimum = DOUBLE : 0
+Maximum = DOUBLE : 100
+
+[/History/Display/msysmon/localhost-CPU]
+Variables = STRING[12] :
+[64] pcfcc_msysmon:CPUA[0]
+[64] pcfcc_msysmon:CPUA[1]
+[64] pcfcc_msysmon:CPUA[2]
+[64] pcfcc_msysmon:CPUA[3]
+[64] pcfcc_msysmon:CPUA[4]
+[64] pcfcc_msysmon:CPUA[5]
+[64] pcfcc_msysmon:CPUA[6]
+[64] pcfcc_msysmon:CPUA[7]
+[64] pcfcc_msysmon:CPUA[8]
+[64] pcfcc_msysmon:CPUA[9]
+[64] pcfcc_msysmon:CPUA[10]
+[64] pcfcc_msysmon:CPUA[11]
+Label = STRING[12] :
+[32] CPU1 Load (%)
+[32] CPU2 Load (%)
+[32] CPU3 Load (%)
+[32] CPU4 Load (%)
+[32] CPU5 Load (%)
+[32] CPU6 Load (%)
+[32] CPU7 Load (%)
+[32] CPU8 Load (%)
+[32] CPU9 Load (%)
+[32] CPU10 Load (%)
+[32] CPU11 Load (%)
+[32] CPU12 Load (%)
+Colour = STRING[12] :
+[32] #00AAFF
+[32] #FF9000
+[32] #FF00A0
+[32] #00C030
+[32] #A0C0D0
+[32] #D0A060
+[32] #C04010
+[32] #807060
+[32] #F0C000
+[32] #2090A0
+[32] #D040D0
+[32] #90B000
+Timescale = STRING : [3] 1h
+Minimum = DOUBLE : 0
+Maximum = DOUBLE : 100
+
+[/History/Display/msysmon/localhost-net]
+Variables = STRING[6] :
+[64] pcfcc_msysmon:NETR[0]
+[64] pcfcc_msysmon:NETR[1]
+[64] pcfcc_msysmon:NETR[2]
+[64] pcfcc_msysmon:NETT[0]
+[64] pcfcc_msysmon:NETT[1]
+[64] pcfcc_msysmon:NETT[2]
+Label = STRING[6] :
+[32]     lo Received (Mbps)
+[32]   eno1 Received (Mbps)
+[32] enp0s20f0u7 Received (Mbps)
+[32]     lo Transmitted (Mbps)
+[32]   eno1 Transmitted (Mbps)
+[32] enp0s20f0u7 Transmitted (Mbps)
+Colour = STRING[6] :
+[32] #00AAFF
+[32] #FF9000
+[32] #FF00A0
+[32] #00C030
+[32] #A0C0D0
+[32] #D0A060
+Timescale = STRING : [3] 1h
+Minimum = DOUBLE : 0
+Maximum = DOUBLE : inf
+
+[/History/Links/System]
+Trigger per sec. = LINK : [46] /Equipment/Trigger/Statistics/Events per sec.
+Trigger kB per sec. = LINK : [46] /Equipment/Trigger/Statistics/kBytes per sec.
+
+[/History/Images/Demo]
+Name = STRING : [12] Demo Camera
+Enabled = BOOL : n
+URL = STRING : [33] https://localhost:8000/image.jpg
+Extension = STRING : [5] .jpg
+Period = INT32 : 60
+Last fetch = INT32 : 0
+Storage hours = INT32 : 0
+Error interval (s) = INT32 : 60
+Last error = INT32 : 0
+Timescale = STRING : [3] 8h
+
+[/History]
+LoggerHistoryChannel = STRING : [1] 
+
+[/Sequencer/State]
+New File = BOOL : n
+Path = STRING : [256] 
+Filename = STRING : [256] 
+Error = STRING : [256] 
+Error line = INT32 : 0
+SError line = INT32 : 0
+Message = STRING : [256] 
+Message Wait = BOOL : n
+Running = BOOL : n
+Finished = BOOL : y
+Paused = BOOL : n
+Debug = BOOL : n
+Current line number = INT32 : 0
+SCurrent line number = INT32 : 0
+SFilename = STRING : [256] 
+Follow Libraries = BOOL : y
+Stop after run = BOOL : n
+Transition request = BOOL : n
+Loop start line = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+SLoop start line = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+Loop end line = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+SLoop end line = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+Loop counter = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+Loop n = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+Subdir = STRING : [256] 
+Subdir end line = INT32 : 0
+Subdir not notify = INT32 : 0
+If index = INT32 : 0
+If line = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+If else line = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+If endif line = INT32[10] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+[4] 0
+[5] 0
+[6] 0
+[7] 0
+[8] 0
+[9] 0
+Stack index = INT32 : 0
+Subroutine end line = INT32[4] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+Subroutine return line = INT32[4] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+Subroutine call line = INT32[4] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+SSubroutine call line = INT32[4] :
+[0] 0
+[1] 0
+[2] 0
+[3] 0
+Subroutine param = STRING[4] :
+[256] 
+[256] 
+[256] 
+[256] 
+Wait value = FLOAT : 0
+Wait limit = FLOAT : 0
+Start time = UINT32 : 0
+Wait type = STRING : [32] 
+Wait ODB = STRING : [256] 
+Last msg = STRING : [10] 00:00:00
+
+[/Sequencer/Command]
+Start script = BOOL : n
+Stop immediately = BOOL : n
+Stop after run = BOOL : n
+Cancel stop after run = BOOL : n
+Pause script = BOOL : n
+Resume script = BOOL : n
+Debug script = BOOL : n
+Step over = BOOL : n
+Load new file = BOOL : n
+Load filename = STRING : [1] 
+
