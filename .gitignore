@@ -7,4 +7,5 @@
 .SHM_TYPE.TXT
 .SYSMSG.SHM
 .SYSTEM.SHM
+.LOGGER_HISTORY_EVENTS.TXT
 frontends/tek_fe/build/*
