@@ -1,0 +1,6 @@
+[submodule "frontends/caenhv_fe/dsproto_sy4527"]
+	path = frontends/caenhv_fe/dsproto_sy4527
+	url = https://bitbucket.org/ttriumfdaq/dsproto_sy4527.git
+[submodule "frontends/caenhv_fe/CAENlibs"]
+	path = frontends/caenhv_fe/CAENlibs
+	url = https://github.com/flagarde/CAENlibs.git

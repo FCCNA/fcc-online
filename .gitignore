@@ -9,3 +9,5 @@
 .SYSTEM.SHM
 .LOGGER_HISTORY_EVENTS.TXT
 frontends/tek_fe/build/*
+frontends/caenhv_fe/build/*
+frontends/caenhv_fe/bin/*
