@@ -1,7 +1,7 @@
 /********************************************************************\
 
   Name:         tek_fe.cpp
-  Created by:   MArco Francesconi
+  Created by:   Marco Francesconi
 
   Contents:     Textronix frontend
 
@@ -17,19 +17,70 @@
 
 #include "mfe.h"
 #include "tek.h"
+#include "odbxx.h"
+
+using namespace std::placeholders;
 
 class tek_midas: public tek {
-char* fPointer = nullptr;
+   char* fPointer = nullptr;
+   midas::odb   fOdbSettings{};
 
-public:
+   public:
+   void stateCallback(midas::odb &o) {
+	   printf("callback\n");
+   }
    tek_midas(bool pushMode = false): tek(pushMode){
+      midas::odb settings = {
+         { "IP Address", "192.168.50.25"},
+         { "IP Port", 4000},
+         { "Channel Enable", false},
+         { "Channel Position", 1.},
+         { "Channel Offset", 1.},
+         { "Channel Scale", 1.},
+         { "Horizontal Position", 1.},
+         { "Horizontal Scale", 1.},
+         { "Sample Rate", 1.}
+      };
+      settings.connect("/Equipment/Trigger/Settings");
+
+      fOdbSettings.connect("/Equipment/Trigger/Settings");
+      fOdbSettings["Channel Enable"].resize(TEK_NCHANNEL);
+      fOdbSettings["Channel Position"].resize(TEK_NCHANNEL);
+      fOdbSettings["Channel Offset"].resize(TEK_NCHANNEL);
+      fOdbSettings["Channel Scale"].resize(TEK_NCHANNEL);
+
+      Connect(fOdbSettings["IP Address"], fOdbSettings["IP Port"]);
+      AlignODB();
+
+      fOdbSettings.set_trigger_hotlink(false);
+      std::function<void(midas::odb&)> f = std::bind(&tek_midas::stateCallback, this, std::placeholders::_1);
+      fOdbSettings.watch(f);
+
       if(IsPushMode())
-	  std::cout << "Push Mode" << std::endl;
+         std::cout << "Push Mode" << std::endl;
       else
-	  std::cout << "Pull Mode" << std::endl;
+         std::cout << "Pull Mode" << std::endl;
    }
 
    ~tek_midas(){
+   }
+
+   void AlignODB(bool query=false){
+      if(query)
+         QueryState();
+
+      for(int i=0; i<TEK_NCHANNEL; i++){
+         fOdbSettings["Channel Enable"][i] = fChannelEnabled[i];
+         if(fChannelEnabled[i]){
+            fOdbSettings["Channel Position"][i] = fChannelPosition[i];
+            fOdbSettings["Channel Offset"][i] = fChannelOffset[i];
+            fOdbSettings["Channel Scale"][i] = fChannelScale[i];
+         }
+      }
+
+      fOdbSettings["Horizontal Position"] = fHorizontalPosition;
+      fOdbSettings["Horizontal Scale"] = fHorizontalScale;
+      fOdbSettings["Sample Rate"] = fHorizontalSampleRate;
    }
 
    void Configure(){
@@ -45,37 +96,29 @@ public:
       /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");*/
       std::string channels = "";
       for(int i=0; i< TEK_NCHANNEL; i++){
-	 std::string enabled = ReadCmd("DIS:GLO:CH"+std::to_string(i+1)+":STATE?\n");
-	 if(enabled.front()=='1'){
-		if(channels.length())
-			channels += ",";
-		 channels += "CH"+std::to_string(i+1);
-	 }
+         if(fChannelEnabled[i]=='1'){
+            if(channels.length())
+               channels += ",";
+            channels += "CH"+std::to_string(i+1);
+         }
       }
       channels += '\n';
       std::cout << "Enabled Channels: " << channels;
       WriteCmd("DAT:SOU " + channels + "\n");
-      
+
       if(IsPushMode()){
-          WriteCmd("!t 300000\n");
+         WriteCmd("!t 300000\n");
       } else {
-          WriteCmd("!t 10000\n");
+         WriteCmd("!t 10000\n");
       }
    }
 
    void BeginOfRun(){
-      /*for(int i=0; i<TEK_NCHANNEL; i++){
-         if(fChannelEnabled[i]){
-            fOutputStream << "# Channel " << i << ": Position=" << fChannelPosition[i] << " Offset=" << fChannelOffset[i] << " Scale=" << fChannelScale[i] << std::endl; 
-         }
-      }
-
-      fOutputStream << "# Horizontal: Position=" << fHorizontalPosition << " Scale=" << fHorizontalScale << " SampleRate="<< fHorizontalSampleRate << std::endl; */
-
+      AlignODB();
    };
 
    void SetEventPointer(WORD* ptr){
-	fPointer = (char*)ptr;
+      fPointer = (char*)ptr;
    };
 
    void ConsumeChannel(int npt, int id){
@@ -94,10 +137,10 @@ public:
          int size = npt-nbyte;
          int n = read(sockfd, padc, size);
          /*for(int i=0; i<(n/sizeof(unsigned char)); i++){
-            fOutputStream << ", " << +(buff[i]);
-         }*/
+           fOutputStream << ", " << +(buff[i]);
+           }*/
          nbyte += n;
-	 padc += n;
+         padc += n;
       }
 
       bk_close(fPointer, padc);
@@ -114,7 +157,7 @@ const char *frontend_name = "Tektronix Frontend";
 const char *frontend_file_name = __FILE__;
 
 /* frontend_loop is called periodically if this variable is TRUE    */
-BOOL frontend_call_loop = FALSE;
+BOOL frontend_call_loop = TRUE;
 
 /* a frontend status page is displayed with this frequency in ms    */
 INT display_period = 0;//1000;
@@ -174,7 +217,6 @@ tek_midas* instrument;
 INT frontend_init()
 {
    instrument = new tek_midas(true);
-   instrument->Connect("192.168.50.25", 4000);
 
    /* create a ring buffer for each thread */
    create_event_rb(0);
@@ -227,6 +269,10 @@ INT resume_run(INT run_number, char *error)
 INT frontend_loop()
 {
 
+   if(! instrument->IsStreaming()){
+	   instrument->AlignODB(true);
+
+   }
    return CM_SUCCESS;
 }
 
@@ -291,7 +337,7 @@ INT trigger_thread(void *param)
          bk_init32(pdata);
          
          
-	 instrument->SetEventPointer(pdata);
+         instrument->SetEventPointer(pdata);
          instrument->ReadData();
          pevent->data_size = bk_size(pdata);
 

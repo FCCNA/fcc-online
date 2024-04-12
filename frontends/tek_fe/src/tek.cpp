@@ -56,7 +56,6 @@ std::string tek::ReadCmd(const std::string &cmd){
 
 void tek::SendClear(){
    WriteCmd("!d\n");
-   state = 0;
 
    //Consume All buffer
    while (HasEvent()){
@@ -67,12 +66,12 @@ void tek::SendClear(){
 void tek::WaitOperationComplete(){
    std::string ret = ReadCmd("*OPC?\n");
    while(!ret.empty() && ret.front() == '1')
-	   ret = ReadCmd("*OPC?\n");
+      ret = ReadCmd("*OPC?\n");
 }
 
 void tek::QueryState(){
    //check enabled channels
-   std::string enabledChannels = ReadCmd("DAT:SOU?\n");
+   /*std::string enabledChannels = ReadCmd("DAT:SOU?\n");
    for(int i=0; i< TEK_NCHANNEL; i++) fChannelEnabled[i] = false;
 
    std::istringstream streamEnabledChannels(enabledChannels); 
@@ -81,15 +80,19 @@ void tek::QueryState(){
       if(chn.rfind("CH", 0) == 0){
          fChannelEnabled[chn[2]-'1'] = true;
       }
-   }
+   }*/
 
    //get vertical 
    for(int i=0; i< TEK_NCHANNEL; i++){
-      if(fChannelEnabled[i]){
-         fChannelPosition[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":POS?\n"));
-         fChannelOffset[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":OFFS?\n"));
-         fChannelScale[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":SCA?\n"));
+      std::string enabled = ReadCmd("DIS:GLO:CH"+std::to_string(i+1)+":STATE?\n");
+      if(enabled.front()=='1'){
+         fChannelEnabled[i] = true;
+      } else {
+         fChannelEnabled[i] = false;
       }
+      fChannelPosition[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":POS?\n"));
+      fChannelOffset[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":OFFS?\n"));
+      fChannelScale[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":SCA?\n"));
    }
    fHorizontalPosition = std::stof(ReadCmd("HOR:POS?\n"));
    fHorizontalScale = std::stof(ReadCmd("HOR:SCA?\n"));
@@ -135,9 +138,9 @@ bool tek::IsBusy(){
    while(n <= 0) read(sockfd, buff, sizeof(buff));
 
    if(buff[0]== '0')
-	   return false;
+      return false;
    else
-	   return true;
+      return true;
 }
 
 void tek::Start(){
@@ -165,8 +168,10 @@ void tek::Stop(){
    std::cout << "Stopping... ";
    if(fPushMode){
       SendClear();
+      state = 0;
       WriteCmd("ACQ:STATE STOP\n");
    } else {
+      state = 0;
       WriteCmd("ACQ:STATE STOP\n");
    }
    WriteCmd("DIS:WAVE ON\n");
@@ -198,7 +203,7 @@ bool tek::HasEvent(){
       if(IsBusy()){
          return false;
       } else {
-	 return true;
+    return true;
       }
    }
 }
@@ -231,29 +236,29 @@ bool tek::ReadData(){
 
    //if pull mode, fetch data
    if(!fPushMode){
-	   /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");
-	   std::cout << "Available: "<< channels;
-	   while(channels.front() != 'C'){
-		   //std::string busy = ReadCmd("BUSY?\n");
-		   //std::cout << "Busy State: "<< busy;
-		   usleep(1000);
-	           channels = ReadCmd("DAT:SOU:AVAIL?\n");
-		   std::cout << "Available: "<< channels;
-	   }*/
-	   WriteCmd("CURV?\n");
-	   fd_set fds;
-	   struct timeval tv;
-	   tv.tv_sec=0;
-	   tv.tv_usec=100000;
-	   FD_ZERO(&fds);
-	   FD_SET(sockfd, &fds);
-	   int ret = select(sockfd+1, &fds, 0, 0, &tv);
-	   if(ret <= 0){
-		   std::cout << "No data received" << std::endl;
-		   std::cout << ReadCmd("*ESR?\n");
-		   std::cout << ReadCmd("ALLEV?\n");
-		   return false;
-	   }
+      /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");
+      std::cout << "Available: "<< channels;
+      while(channels.front() != 'C'){
+         //std::string busy = ReadCmd("BUSY?\n");
+         //std::cout << "Busy State: "<< busy;
+         usleep(1000);
+         channels = ReadCmd("DAT:SOU:AVAIL?\n");
+         std::cout << "Available: "<< channels;
+      }*/
+      WriteCmd("CURV?\n");
+      fd_set fds;
+      struct timeval tv;
+      tv.tv_sec=0;
+      tv.tv_usec=100000;
+      FD_ZERO(&fds);
+      FD_SET(sockfd, &fds);
+      int ret = select(sockfd+1, &fds, 0, 0, &tv);
+      if(ret <= 0){
+         std::cout << "No data received" << std::endl;
+         std::cout << ReadCmd("*ESR?\n");
+         std::cout << ReadCmd("ALLEV?\n");
+         return false;
+      }
    }
 
    while(!gotFooter){
