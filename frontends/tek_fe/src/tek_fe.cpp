@@ -96,7 +96,7 @@ class tek_midas: public tek {
       /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");*/
       std::string channels = "";
       for(int i=0; i< TEK_NCHANNEL; i++){
-         if(fChannelEnabled[i]=='1'){
+         if(fChannelEnabled[i]){
             if(channels.length())
                channels += ",";
             channels += "CH"+std::to_string(i+1);
@@ -216,7 +216,7 @@ tek_midas* instrument;
 
 INT frontend_init()
 {
-   instrument = new tek_midas(true);
+   instrument = new tek_midas(true); //set to false for polling mode
 
    /* create a ring buffer for each thread */
    create_event_rb(0);
@@ -271,7 +271,6 @@ INT frontend_loop()
 
    if(! instrument->IsStreaming()){
 	   instrument->AlignODB(true);
-
    }
    return CM_SUCCESS;
 }
@@ -335,7 +334,6 @@ INT trigger_thread(void *param)
          
          /* init bank structure */
          bk_init32(pdata);
-         
          
          instrument->SetEventPointer(pdata);
          instrument->ReadData();
