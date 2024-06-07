@@ -4,3 +4,6 @@
 [submodule "frontends/caenhv_fe/CAENlibs"]
 	path = frontends/caenhv_fe/CAENlibs
 	url = https://github.com/flagarde/CAENlibs.git
+[submodule "frontends/n1081b_fe/SDK"]
+	path = frontends/n1081b_fe/SDK
+	url = https://github.com/NuclearInstruments/N1081B-SDK-Python.git
