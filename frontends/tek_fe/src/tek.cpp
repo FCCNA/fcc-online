@@ -44,6 +44,7 @@ std::string tek::ReadCmd(const std::string &cmd){
       return "";
    } else if (ret > 0){
       int n = read(sockfd, buff, sizeof(buff));
+      while(buff[n-1]!='\n') n += read(sockfd, buff+n, sizeof(buff)-n);
 
       if (n>0) 
          return std::string(buff, n);
