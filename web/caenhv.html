@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="mcss">
+<head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="midas.css">
+   <script src="controls.js"></script>
+   <script src="midas.js"></script>
+   <script src="mhttpd.js"></script>
+   <title>CAEN HV</title>
+
+   <style>
+      .mtable td { padding: 5px; }
+   </style>
+
+   <script>
+     function check_fe_running() {
+    	 var path = "/System/Clients";
+       mjsonrpc_db_get_value(path).then(
+    		 function(rpc) {
+    			 let hv_running = false;
+           if (rpc.result.status[0] == 1) {
+        	   let clients = rpc.result.data[0];
+        	   for (let key in clients) {
+        		   if (key.endsWith("/name")) {
+        			   continue;
+        		   }
+        		   
+        		   if (clients[key].name.startsWith("caenhv")) {
+        			   hv_running = true;
+        		   }
+        	   }
+           }
+           
+           if (!hv_running) {
+        	   document.getElementById("hv_fe_stopped").style.display = "block";
+           } else {
+             document.getElementById("hv_fe_stopped").style.display = "none";
+           }
+           setTimeout(check_fe_running, 5000);
+         }).catch(function(error) {
+           mjsonrpc_error_alert(error);
+           setTimeout(check_fe_running, 5000);
+         });
+     }
+
+     function clear_hv_alarm(odb_path) {
+       // Ensure we toggle between false and true, in case
+       // key is already stuck at true, in which case FE
+       // wouldn't detect a change.
+       mjsonrpc_db_set_value(odb_path, false).then(
+        function(rpc) {
+          mjsonrpc_db_set_value(odb_path, true);
+        }
+       );
+     }
+     
+     function init() {
+    	 check_fe_running();
+    	 
+    	 // Get slot properties and build HTML tables.
+    	 let paths = ["/Equipment/caen_hv/Status", "/Equipment/caen_hv/Settings"];
+       mjsonrpc_db_get_values(paths).then(
+         function(rpc) {
+      	   let html = "";
+      	   if (rpc.result.status[0] == 1 && rpc.result.status[1] == 1) {
+      		   let slots = []
+      		   
+      		   let all_keys = Object.keys(rpc.result.data[0]);
+      		   for (let i = 0; i < all_keys.length; i++) {
+      			   if (all_keys[i].indexOf("/") == -1) {
+      				   slots.push(all_keys[i]);
+      			   }
+      		   }
+      		   
+      		   for (let s = 0; s < slots.length; s++) {
+      			   let slot_name = rpc.result.data[0][slots[s] + "/name"];
+      			   let stat = rpc.result.data[0][slots[s]];
+               let sett = rpc.result.data[1][slots[s]];
+               let stat_path = paths[0] + "/" + slot_name;
+               let sett_path = paths[1] + "/" + slot_name;
+
+               // Figure out units for VSet, ISet, VMon, IMon (may be uA/A, mV/V etc).
+               //
+               // Also find the key used to clear alarms on modules that support that (parameter 
+               // is called 'ClrAlarm' or 'Clr Alarm' on different modules.)
+               
+               let v0set_units = "V";
+               let vmon_units = "V";
+               let i0set_units = "uA";
+               let imon_units = "uA";
+               let clear_alarm_path = undefined;
+
+               for (let k in sett) {
+                 if (k.indexOf("/") != -1) {continue;}
+                 if (k.startsWith("v0set")) {v0set_units = sett[k + "/name"].split("(")[1].replace(")", "");}
+                 if (k.startsWith("i0set")) {i0set_units = sett[k + "/name"].split("(")[1].replace(")", "");}
+                 if (k == "clralarm" || k == "clr alarm") {clear_alarm_path = sett_path + "/" + sett[k + "/name"];}
+               }
+
+               for (let k in stat) {
+                 if (k.indexOf("/") != -1) {continue;}
+                 if (k.startsWith("vmon")) {vmon_units = stat[k + "/name"].split("(")[1].replace(")", "");}
+                 if (k.startsWith("imon")) {imon_units = stat[k + "/name"].split("(")[1].replace(")", "");}
+               }
+
+               html += '<table class="mtable">';
+      			   html += '<thead>';
+      			   html += '<tr><th colspan="8" class="mtableheader">CAEN HV - ' + slot_name + '</th></tr>';
+      			   html += '<tr><td colspan="8">';
+               html += '  Model ' + stat["model"] + ' (' + stat["description"].trim() + ').&nbsp;&nbsp;&nbsp;&nbsp;';
+               html += '  <a href="?cmd=odb&odb_path=/Equipment/caen_hv/Settings/' + slot_name + '">All settings</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+               html += '  <a href="?cmd=odb&odb_path=/Equipment/caen_hv/Status/' + slot_name + '">Full status</a>';
+               
+               if (clear_alarm_path !== undefined) {
+                 html += '&nbsp;&nbsp;&nbsp;&nbsp;<button class="mbutton" onclick="clear_hv_alarm(\'' + clear_alarm_path + '\')">Clear alarms</button>';
+               }
+
+               html += '</td></tr>';
+      			   html += '<tr><th>Ch #</th><th>Channel name</th><th>On/off</th><th>V set (' + v0set_units + ')</th><th>V meas. (' + vmon_units + ')</th><th>I limit (' + i0set_units + ')</th><th>I meas. (' + imon_units + ')</th><th>State</th></tr>';
+      			   html += '</thead>'
+      			   html += '<tbody>';
+      			   
+      			   for (let c = 0; c < stat["num channels"]; c++) {
+      				   html += '<tr>';
+                 html += '<td>' + c + '</td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/ChName[' + c + ']" data-odb-editable="1"></span></td>';
+                 html += '<td><input type="checkbox" class="modbcheckbox" data-odb-path="' + sett_path + '/Pw[' + c + ']" data-odb-editable="1"></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/VSet (' + v0set_units + ')[' + c + ']" data-odb-editable="1" data-format="f2"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/VMon (' + vmon_units + ')[' + c + ']" data-format="f2"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/ISet (' + i0set_units + ')[' + c + ']" data-odb-editable="1" data-format="f2"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/IMonH (' + imon_units + ')[' + c + ']" data-format="f2"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/ChStatus String[' + c + ']"></span></td>';
+      				   html += '</tr>';
+      			   }
+      			   
+               html += '</tbody>';
+               html += '</table>';
+      		   }
+      	   } else {
+      		   html = "CAEN HV frontend hasn't been run yet.";
+      	   }
+      	   document.getElementById("slots").innerHTML = html;
+           mhttpd_init('CAEN HV');
+         }).catch(function(error) {
+           mjsonrpc_error_alert(error);
+         });
+     }
+   </script>
+</head>
+
+<body class="mcss" onload="init();">
+
+<!-- header and side navigation will be filled in mhttpd_init -->
+<div id="mheader"></div>
+<div id="msidenav"></div>
+
+<div id="mmain">
+
+  <table><tr><td style="vertical-align:top; padding-left:10px">
+	  <div id="hv_fe_stopped" style="display:none;" class="mred mfont">
+	    The Caen HV driver program is not running! Go to the <a href="?cmd=Programs">Programs page</a>
+	    and start the CAENHV program!
+	  </div>
+	  <div id="slots">
+	  </div>
+  </td></tr></table>
+
+
+
+</div>
+
+
+</body>
+</html>
+
