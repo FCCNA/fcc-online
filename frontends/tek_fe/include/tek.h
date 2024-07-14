@@ -13,9 +13,11 @@ protected:
    float fChannelScale[TEK_NCHANNEL];
    float fChannelPosition[TEK_NCHANNEL];
    float fChannelOffset[TEK_NCHANNEL];
+   float fChannelBandwidth[TEK_NCHANNEL];
    float fHorizontalScale;
    float fHorizontalPosition;
    float fHorizontalSampleRate;
+   std::string fAcquisitionMode;
    int fEventNumber = 0;
    const bool fPushMode;
    

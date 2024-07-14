@@ -37,9 +37,11 @@ class tek_midas: public tek {
          { "Channel Position", 1.},
          { "Channel Offset", 1.},
          { "Channel Scale", 1.},
+         { "Channel Bandwidth", 1.},
          { "Horizontal Position", 1.},
          { "Horizontal Scale", 1.},
-         { "Sample Rate", 1.}
+         { "Sample Rate", 1.},
+         { "Acquisition Mode", "SAMPLE"}
       };
       settings.connect("/Equipment/Trigger/Settings");
 
@@ -48,6 +50,7 @@ class tek_midas: public tek {
       fOdbSettings["Channel Position"].resize(TEK_NCHANNEL);
       fOdbSettings["Channel Offset"].resize(TEK_NCHANNEL);
       fOdbSettings["Channel Scale"].resize(TEK_NCHANNEL);
+      fOdbSettings["Channel Bandwidth"].resize(TEK_NCHANNEL);
 
       Connect(fOdbSettings["IP Address"], fOdbSettings["IP Port"]);
       AlignODB();
@@ -75,12 +78,14 @@ class tek_midas: public tek {
             fOdbSettings["Channel Position"][i] = fChannelPosition[i];
             fOdbSettings["Channel Offset"][i] = fChannelOffset[i];
             fOdbSettings["Channel Scale"][i] = fChannelScale[i];
+            fOdbSettings["Channel Bandwidth"][i] = fChannelBandwidth[i];
          }
       }
 
       fOdbSettings["Horizontal Position"] = fHorizontalPosition;
       fOdbSettings["Horizontal Scale"] = fHorizontalScale;
       fOdbSettings["Sample Rate"] = fHorizontalSampleRate;
+      fOdbSettings["Acquisition Mode"] = fAcquisitionMode.substr(0,5);
    }
 
    void Configure(){

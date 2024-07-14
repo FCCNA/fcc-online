@@ -94,10 +94,12 @@ void tek::QueryState(){
       fChannelPosition[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":POS?\n"));
       fChannelOffset[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":OFFS?\n"));
       fChannelScale[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":SCA?\n"));
+      fChannelBandwidth[i] = std::stof(ReadCmd("CH"+std::to_string(i+1)+":BAN?\n"));
    }
    fHorizontalPosition = std::stof(ReadCmd("HOR:POS?\n"));
    fHorizontalScale = std::stof(ReadCmd("HOR:SCA?\n"));
    fHorizontalSampleRate = std::stof(ReadCmd("HOR:SAMPLER?\n"));
+   fAcquisitionMode = ReadCmd("ACQ:MODE?\n").substr(0,5);
 }
 
 void tek::Connect(const std::string &ip, int port){
