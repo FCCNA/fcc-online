@@ -29,7 +29,7 @@ public:
       WriteCmd("DAT:STOP "+ points + "\n");
 
       //set 8 bit
-      WriteCmd("DAT:WID 1\n");
+      //WriteCmd("DAT:WID 1\n");
 
       //send all enabled channels
       /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");*/
@@ -73,8 +73,12 @@ public:
       while(nbyte < npt){
          int size = (sizeof(buff)>(npt-nbyte))?(npt-nbyte):sizeof(buff);
          int n = read(sockfd, buff, size);
-         for(int i=0; i<(n/sizeof(unsigned char)); i++){
-            fOutputStream << ", " << +(buff[i]);
+         for(int i=0; i+1<(n/sizeof(unsigned char)); i+=2){
+            int val = buff[i+1];
+	    val = val << 8;
+	    val |= buff[i];
+            fOutputStream << ", " << val;
+            //fOutputStream << ", " << +(buff[i]);
          }
          nbyte += n;
       }

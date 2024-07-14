@@ -90,7 +90,7 @@ class tek_midas: public tek {
       WriteCmd("DAT:STOP "+ points + "\n");
 
       //set 8 bit
-      WriteCmd("DAT:WID 1\n");
+      //WriteCmd("DAT:WID 1\n");
 
       //send all enabled channels
       /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");*/
@@ -128,7 +128,8 @@ class tek_midas: public tek {
       /* create ADC0 bank */
       char bkname[] = "TEK0";
       bkname[3] += id;
-      bk_create(fPointer, bkname, TID_BYTE, (void **)&padc);
+      //bk_create(fPointer, bkname, TID_UINT8, (void **)&padc);
+      bk_create(fPointer, bkname, TID_UINT16, (void **)&padc);
 
       int nbyte = 0;
       //fOutputStream << fEventNumber << ", " << id;
@@ -269,9 +270,9 @@ INT resume_run(INT run_number, char *error)
 INT frontend_loop()
 {
 
-   if(! instrument->IsStreaming()){
+   /*if(! instrument->IsStreaming()){
 	   instrument->AlignODB(true);
-   }
+   }*/
    return CM_SUCCESS;
 }
 

@@ -152,6 +152,8 @@ void tek::Start(){
    std::cout << "Starting... ";
    WriteCmd("DATA:ENC RPB\n");
    WriteCmd("DIS:WAVE OFF\n");
+   WriteCmd("DAT:WID 2\n");
+   WriteCmd("WFMO:BYT_O LSB\n");
    if(fPushMode){
       WriteCmd("ACQ:STATE RUN\n");
       WriteCmd("CURVES?\n");
