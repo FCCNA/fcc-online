@@ -126,7 +126,7 @@ class tek_midas: public tek {
       fPointer = (char*)ptr;
    };
 
-   void ConsumeChannel(int npt, int id){
+   bool ConsumeChannel(int npt, int id){
       //std::cout << "Consuming channel " << id <<std::endl;
       char* padc;
 
@@ -141,7 +141,11 @@ class tek_midas: public tek {
       while(nbyte < npt){
          //int size = (sizeof(buff)>(npt-nbyte))?(npt-nbyte):sizeof(buff);
          int size = npt-nbyte;
-         int n = read(sockfd, padc, size);
+         int n = ReadFromSocket(padc, size);
+	 if (n < 0){
+            bk_close(fPointer, padc);
+            return false;
+	 }
          /*for(int i=0; i<(n/sizeof(unsigned char)); i++){
            fOutputStream << ", " << +(buff[i]);
            }*/
@@ -150,6 +154,7 @@ class tek_midas: public tek {
       }
 
       bk_close(fPointer, padc);
+      return true;
    };
 
 };

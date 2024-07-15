@@ -8,9 +8,11 @@
 #include <unistd.h> // read(), write(), close()
 #include <iostream>
 #include <sstream>
+#include <thread> //std::this_thread::yield()
 
 tek::tek(bool pushMode): fPushMode(pushMode){
    state = 0;
+   receivingData = false;
 }
 
 void tek::WriteCmd(const std::string &cmd){
@@ -43,8 +45,8 @@ std::string tek::ReadCmd(const std::string &cmd){
    if(ret < 0){
       return "";
    } else if (ret > 0){
-      int n = read(sockfd, buff, sizeof(buff));
-      while(buff[n-1]!='\n') n += read(sockfd, buff+n, sizeof(buff)-n);
+      int n = ReadFromSocket(buff, sizeof(buff));
+      while(buff[n-1]!='\n') n += ReadFromSocket(buff+n, sizeof(buff)-n);
 
       if (n>0) 
          return std::string(buff, n);
@@ -57,11 +59,6 @@ std::string tek::ReadCmd(const std::string &cmd){
 
 void tek::SendClear(){
    WriteCmd("!d\n");
-
-   //Consume All buffer
-   while (HasEvent()){
-      ReadData();
-   }
 }
 
 void tek::WaitOperationComplete(){
@@ -130,6 +127,10 @@ bool tek::IsStreaming(){
    return state == 1;
 }
 
+bool tek::IsReceivingData(){
+   return receivingData;
+}
+
 bool tek::IsBusy(){
    char buff[2];
    buff[0]=0;
@@ -137,8 +138,8 @@ bool tek::IsBusy(){
    
    WriteCmd("BUSY?\n");
 
-   int n = read(sockfd, buff, sizeof(buff));
-   while(n <= 0) read(sockfd, buff, sizeof(buff));
+   int n = ReadFromSocket(buff, sizeof(buff));
+   while(n <= 0) ReadFromSocket(buff, sizeof(buff));
 
    if(buff[0]== '0')
       return false;
@@ -172,8 +173,26 @@ void tek::Start(){
 void tek::Stop(){
    std::cout << "Stopping... ";
    if(fPushMode){
-      SendClear();
       state = 0;
+      SendClear();
+
+      //wait for other thread to receive state
+      std::this_thread::sleep_for(std::chrono::milliseconds(20));
+
+      while(IsReceivingData()){
+	 std::this_thread::yield();
+      }
+      printf("Other thread stopped\n");
+
+      EmptySocket();
+
+      //Consume All buffer
+      /*while (HasEvent()){
+         ReadData();
+      }*/
+      
+      
+
       WriteCmd("ACQ:STATE STOP\n");
    } else {
       state = 0;
@@ -213,6 +232,33 @@ bool tek::HasEvent(){
    }
 }
 
+void tek::EmptySocket(){
+   char* buff[1000];
+   int n=0;
+   int total=0;
+   do{
+      n = ReadFromSocket(buff, sizeof(buff));
+      if (n>0) total += n;
+   } while (n>=0);
+
+   printf("consumed %d bytes\n", total);
+}
+
+int tek::ReadFromSocket(void* buffer, int n){
+   fd_set fds;
+   struct timeval tv;
+   tv.tv_sec=1;
+   tv.tv_usec=0;
+   FD_ZERO(&fds);
+   FD_SET(sockfd, &fds);
+   int ret = select(sockfd+1, &fds, 0, 0, &tv);
+   if(ret > 0){
+      return read(sockfd, buffer, n);
+   } else {
+      return -1;
+   }
+}
+
 int tek::CharArrayToInt(char* array, int n){
    int base = 1;
    int ret = 0;
@@ -223,15 +269,19 @@ int tek::CharArrayToInt(char* array, int n){
    return ret;
 }
 
-void tek::ConsumeChannel(int npt, int id){
+bool tek::ConsumeChannel(int npt, int id){
    //dummy implementation to be reimplemented by derived classes
    char buff[80];
 
    int nbyte = 0;
    while(nbyte < npt){
       int size = (sizeof(buff)>(npt-nbyte))?(npt-nbyte):sizeof(buff);
-      nbyte += read(sockfd, buff, size);
-   }
+      int n = ReadFromSocket(buff, size);
+      if(n < 0) return false;
+      nbyte += n;
+   } 
+
+   return true;
 }
 
 bool tek::ReadData(){
@@ -239,6 +289,7 @@ bool tek::ReadData(){
    int iChannelBlk=0;
    bool gotFooter=false;
 
+   receivingData = true;
    //if pull mode, fetch data
    if(!fPushMode){
       /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");
@@ -262,28 +313,38 @@ bool tek::ReadData(){
          std::cout << "No data received" << std::endl;
          std::cout << ReadCmd("*ESR?\n");
          std::cout << ReadCmd("ALLEV?\n");
+	 receivingData = false;
          return false;
       }
    }
 
    while(!gotFooter){
-      int n = read(sockfd, buff, 1);
+      int n = ReadFromSocket(buff, 1);
 
       //consume until header
-      while(buff[0] != '#') n = read(sockfd, buff, 1);
+      while(n>0 && buff[0] != '#'){
+         n = ReadFromSocket(buff, 1);
+      }
       //std::cout << "Header found" << std::endl;
 
-      n = read(sockfd, buff, 1);
-      n = read(sockfd, buff, buff[0]-'0');
+      n = ReadFromSocket(buff, 1);
+      if(buff[0] < '0' || buff[0] > '9') {
+         receivingData = false;
+         return false;
+      }
+      n = ReadFromSocket(buff, buff[0]-'0');
 
       int npt = CharArrayToInt(buff, n);
       //printf("got event with %d bytes\n", npt);
 
-      ConsumeChannel(npt, iChannelBlk);
+      if (! ConsumeChannel(npt, iChannelBlk)){
+         receivingData = false;
+         return false;
+      }
       //std::cout << "Read channel " << iChannelBlk << std::endl;
 
       //read footer
-      n = read(sockfd, buff, 1);
+      n = ReadFromSocket(buff, 1);
       if(n == 1 && buff[0]==10){
          //std::cout << "Got Last Channel "<< iChannelBlk << std::endl;
          gotFooter = true;
@@ -292,6 +353,7 @@ bool tek::ReadData(){
          iChannelBlk ++; 
       } else {
          printf("bad footer, got %d with val %d\n", n, buff[0]);
+         receivingData = false;
          return false;
       }
    }
@@ -303,6 +365,7 @@ bool tek::ReadData(){
    if(!fPushMode)
       WriteCmd("ACQ:STATE RUN\n");
 
+   receivingData = false;
    return true;
 }
 

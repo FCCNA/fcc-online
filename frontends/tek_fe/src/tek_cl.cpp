@@ -64,7 +64,7 @@ public:
 
    }
 
-   void ConsumeChannel(int npt, int id){
+   bool ConsumeChannel(int npt, int id){
       //std::cout << "Consuming channel " << id <<std::endl;
       unsigned char buff[10000];
 
@@ -72,7 +72,8 @@ public:
       fOutputStream << fEventNumber << ", " << id;
       while(nbyte < npt){
          int size = (sizeof(buff)>(npt-nbyte))?(npt-nbyte):sizeof(buff);
-         int n = read(sockfd, buff, size);
+         int n = ReadFromSocket(buff, size);
+	 if (n < 0) return false;
          for(int i=0; i+1<(n/sizeof(unsigned char)); i+=2){
             int val = buff[i+1];
 	    val = val << 8;
@@ -82,7 +83,9 @@ public:
          }
          nbyte += n;
       }
+
       fOutputStream << std::endl;
+      return true;
 
    };
 
