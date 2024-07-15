@@ -49,7 +49,9 @@ class ArduinoEquipment(midas.frontend.EquipmentBase):
             "Serial Port": "/dev/ttyUSB0",
             "Serial Speed": 115200,
             "Names ARD0": ["Temperature", "Humidity", "Atmospheric Pressure"],
-            "Unit ARD0": ["C", "%", "hPa"]
+            "Unit ARD0": ["C", "%", "hPa"],
+            "Names ARD1": ["Temperature", "Humidity"],
+            "Unit ARD1": ["C", "%"]
         }
 
         
@@ -57,7 +59,8 @@ class ArduinoEquipment(midas.frontend.EquipmentBase):
         midas.frontend.EquipmentBase.__init__(self, client, equip_name, default_common, default_settings)
 
         # setup parser
-        self.parser = parse.compile('{temperature:f} *C, {pressure:f} hPa, {humidity:f} %\r\n')
+        self.parser_bme = parse.compile('{temperature:f} *C, {pressure:f} hPa, {humidity:f} %\r\n')
+        self.parser_sht = parse.compile('{temperature:f} *C, {humidity:f} %\r\n')
 
 
     def connect(self):
@@ -79,7 +82,7 @@ class ArduinoEquipment(midas.frontend.EquipmentBase):
             raise RuntimeError("Fail to get measurement")
         
         # parse data
-        values = self.parser.parse(result);
+        values = self.parser_bme.parse(result);
 
         if values is None :
             self.client.msg("Error parsing string \'%s\'" % result.rstrip(), is_error=True);
@@ -105,40 +108,64 @@ class ArduinoEquipment(midas.frontend.EquipmentBase):
         or None (if we shouldn't write an event).
         """
 
-        # read from arduino
+        # read bme from arduino
         try :
             self.ser.write(b'T');
             result = self.ser.readline().decode();
         except Exception as e:
-            self.client.msg("Error reading measurement: %s" % str(e), is_error=True);
+            self.client.msg("Error reading bme measurement: %s" % str(e), is_error=True);
             raise RuntimeError("Fail to get measurement")
         
         # parse data
-        values = self.parser.parse(result);
+        values = self.parser_bme.parse(result);
 
         if values is None :
-            self.client.msg("Error parsing string \'%s\'" % result.rstrip(), is_error=True);
+            self.client.msg("Error parsing bme string \'%s\'" % result.rstrip(), is_error=True);
             raise ValueError("cannot parse string");
 
-        temperature = values["temperature"]
-        humidity = values["humidity"]
-        pressure = values["pressure"]
+        temperature_bme = values["temperature"]
+        humidity_bme = values["humidity"]
+        pressure_bme = values["pressure"]
 
         # Create an event
         event = midas.event.Event()
 
         # Create a bank (called "ARD0") which in this case will store 3 floats.
         # data can be a list, a tuple or a numpy array.
-        data = [temperature, humidity, pressure]
+        data = [temperature_bme, humidity_bme, pressure_bme]
 
         event.create_bank("ARD0", midas.TID_FLOAT, data)
 
         #option to fill ODB by hand, instead that with "Log History"
         """
         #fill the ODB
-        self.client.odb_set(f'{self.odb_variables_dir}/Temperature', round(temperature, 3))
-        self.client.odb_set(f'{self.odb_variables_dir}/Humidity', round(humidity, 3))
-        self.client.odb_set(f'{self.odb_variables_dir}/Atmospheric Pressure', round(pressure, 3))"""
+        self.client.odb_set(f'{self.odb_variables_dir}/Temperature', round(temperature_bme, 3))
+        self.client.odb_set(f'{self.odb_variables_dir}/Humidity', round(humidity_bme, 3))
+        self.client.odb_set(f'{self.odb_variables_dir}/Atmospheric Pressure', round(pressure_bme, 3))"""
+
+        # read sht from arduino
+        try :
+            self.ser.write(b'R');
+            result = self.ser.readline().decode();
+        except Exception as e:
+            self.client.msg("Error reading bme measurement: %s" % str(e), is_error=True);
+            raise RuntimeError("Fail to get measurement")
+
+        # parse data
+        values = self.parser_sht.parse(result);
+
+        if values is None :
+            self.client.msg("Error parsing sht string \'%s\'" % result.rstrip(), is_error=True);
+            raise ValueError("cannot parse string");
+
+        temperature_sht = values["temperature"]
+        humidity_sht = values["humidity"]
+
+        # Create a bank (called "ARD1") which in this case will store 2 floats.
+        # data can be a list, a tuple or a numpy array.
+        data = [temperature_sht, humidity_sht]
+
+        event.create_bank("ARD1", midas.TID_FLOAT, data)
 
         return event
 
