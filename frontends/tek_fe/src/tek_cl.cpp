@@ -65,23 +65,23 @@ public:
    }
 
    bool ConsumeChannel(int npt, int id){
-      //std::cout << "Consuming channel " << id <<std::endl;
-      unsigned char buff[10000];
+      //std::cout << "Consuming channel " << id << ", " << npt << " points" << std::endl;
+      unsigned short buff[10000];
+      if (npt > 10000*sizeof(unsigned short)){
+         std::cout << "Channel cannot fit in buffer!" << std::endl;
+	 return false;
+      }
 
       int nbyte = 0;
       fOutputStream << fEventNumber << ", " << id;
       while(nbyte < npt){
          int size = (sizeof(buff)>(npt-nbyte))?(npt-nbyte):sizeof(buff);
-         int n = ReadFromSocket(buff, size);
+         int n = ReadFromSocket((char*)buff + nbyte, size);
 	 if (n < 0) return false;
-         for(int i=0; i+1<(n/sizeof(unsigned char)); i+=2){
-            int val = buff[i+1];
-	    val = val << 8;
-	    val |= buff[i];
-            fOutputStream << ", " << val;
-            //fOutputStream << ", " << +(buff[i]);
-         }
          nbyte += n;
+      }
+      for(int i=0; i<npt/sizeof(unsigned short); i++){
+	      fOutputStream << ", " << buff[i];
       }
 
       fOutputStream << std::endl;
