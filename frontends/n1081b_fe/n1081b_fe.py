@@ -66,6 +66,23 @@ class N1081BEquipment(midas.frontend.EquipmentBase):
             self.client.msg("Cannot connect: %s" % str(e), is_error=True);
             raise RuntimeError("Fail to connect")
 
+        res = self.device.get_sections_function()
+        section_list = [N1081B.Section.SEC_A, N1081B.Section.SEC_B, N1081B.Section.SEC_C, N1081B.Section.SEC_D]
+        allowed_functions = ["and", "or_veto"]
+        for section in res["data"]:
+            print(section["section"])
+            print(section["function_name"])
+
+            config = self.device.get_function_configuration(section_list[section["section"]])
+            initial_val = [False for _ in range(6)]
+            if section["function_name"] in allowed_functions:
+                for lemo in config["data"]["lemo_enables"]:
+                    print(lemo["lemo"], lemo["enable"])
+                    initial_val[lemo["lemo"]] = lemo["enable"]
+                self.client.odb_set(f"{self.odb_settings_dir}/enable_{section['section']}", initial_val, create_if_needed=True)
+
+        print("connection done")
+
         
     def readout_func(self):
         """
@@ -117,10 +134,25 @@ class N1081BEquipment(midas.frontend.EquipmentBase):
         In this version you get told which setting has changed (down to
         specific array elements).
         """
-        if idx is not None:
+        res = self.device.get_sections_function()
+        section_list = [N1081B.Section.SEC_A, N1081B.Section.SEC_B, N1081B.Section.SEC_C, N1081B.Section.SEC_D]
+        if path.startswith(f"{self.odb_settings_dir}/enable_"):
+            if res['data'][int(path[-1])]['function_name']=='and':
+                print("setting and for section %d" % (int(path[-1])))
+                set_val = self.settings[f"enable_{path[-1]}"]
+                print(section_list[int(path[-1])])
+                #self.device.configure_and(section_list[int(path[-1])], set_val[0], set_val[1], set_val[2], set_val[3], set_val[4], set_val[5], False, False)
+            if res['data'][int(path[-1])]['function_name']=='or_veto':
+                print("setting or_veto for section %d" % (int(path[-1])))
+                set_val = self.settings[f"enable_{path[-1]}"]
+                print(set_val)
+                #self.device.configure_or_veto(section_list[int(path[-1])], set_val[0], set_val[1], set_val[2], set_val[3], set_val[4], False, False)
+
+
+        """if idx is not None:
             self.client.msg("Low-level: %s[%d] is now %s" % (path, idx, new_value))
         else:
-            self.client.msg("Low-level: %s is now %s" % (path, new_value))
+            self.client.msg("Low-level: %s is now %s" % (path, new_value))"""
 
 class N1081BFrontend(midas.frontend.FrontendBase):
     """
