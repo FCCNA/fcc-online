@@ -7,10 +7,10 @@ this programs connect to midas and drives the Demand of /Equipment/caen_hv to pe
 
 if __name__ == "__main__":
     client = midas.client.MidasClient("pyIVCurve")
-
+    file = open("IVcurve.txt","w")
     channel = 0;
-    start = 30;
-    end = 35;
+    start = 30.5;
+    end = 46;
     step = 0.25;
     
     # set to initial and switch on
@@ -29,10 +29,13 @@ if __name__ == "__main__":
         time.sleep(10);
         meas = client.odb_get("/Equipment/caen_hv/Variables/VM00[%d]" %(channel))
         curr = client.odb_get("/Equipment/caen_hv/Variables/IM00[%d]" %(channel))
+        file.write(str(meas) + " " + str(curr) + "\n")
         print (str(meas) + "V " + str(curr) + "uA")
         i += 1
 
+    file.close()
     client.odb_set("/Equipment/caen_hv/Settings/Slot 0/VSet (V)[%d]" % (channel), start)
     client.odb_set("/Equipment/caen_hv/Settings/Slot 0/Pw[%d]" % (channel), False)
+
     
     client.disconnect()
