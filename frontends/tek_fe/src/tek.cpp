@@ -63,8 +63,12 @@ void tek::SendClear(){
 
 void tek::WaitOperationComplete(){
    std::string ret = ReadCmd("*OPC?\n");
-   while(!ret.empty() && ret.front() == '1')
+   while(ret.empty() || ret.front() != '1'){
       ret = ReadCmd("*OPC?\n");
+      std::cout << "trying again" << ret <<std::endl;
+   }
+   EmptySocket();
+   std::cout << "operation completed " << ret << std::endl;
 }
 
 void tek::QueryState(){
@@ -186,13 +190,13 @@ void tek::Stop(){
 
       EmptySocket();
 
+      WaitOperationComplete();
+
       //Consume All buffer
       /*while (HasEvent()){
          ReadData();
       }*/
       
-      
-
       WriteCmd("ACQ:STATE STOP\n");
    } else {
       state = 0;
