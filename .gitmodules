@@ -7,3 +7,12 @@
 [submodule "frontends/n1081b_fe/SDK"]
 	path = frontends/n1081b_fe/SDK
 	url = https://github.com/NuclearInstruments/N1081B-SDK-Python.git
+[submodule "frontends/vx2730_fe/dsproto_vx2740"]
+	path = frontends/vx2730_fe/dsproto_vx2740
+	url = https://bitbucket.org/ttriumfdaq/dsproto_vx2740.git
+[submodule "frontends/vx2730_fe/caen-felib"]
+	path = frontends/vx2730_fe/caen-felib
+	url = https://github.com/caenspa/caen-felib.git
+[submodule "frontends/vx2730_fe/caen-dig2"]
+	path = frontends/vx2730_fe/caen-dig2
+	url = https://github.com/caenspa/caen-dig2.git
