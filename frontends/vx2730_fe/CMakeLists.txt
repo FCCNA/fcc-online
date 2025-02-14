@@ -8,13 +8,13 @@ file(GLOB Dig2_SRC
 
 add_library (CAEN_Dig2 SHARED ${Dig2_SRC})
 target_include_directories(CAEN_Dig2 PUBLIC caen-dig2/include caen-dig2/backend-server/include caen-felib/include caen-dig2/json/include/ caen-dig2/spdlog/include)
-set_property(TARGET CAEN_Dig2 PROPERTY CXX_STANDARD 14)
+set_property(TARGET CAEN_Dig2 PROPERTY CXX_STANDARD 20)
 add_compile_definitions(_DARWIN_C_SOURCE)
 set(LIBS -ldl -lpthread -lutil)
 target_link_libraries(CAEN_Dig2 ${LIBS})
 
 
-find_package(Boost 1.75.0 COMPONENTS ALL)
+find_package(Boost 1.75.0)
 if(Boost_FOUND)
    target_include_directories(CAEN_Dig2 PUBLIC ${Boost_INCLUDE_DIRS})
   target_link_libraries(CAEN_Dig2 ${Boost_LIBRARIES})
