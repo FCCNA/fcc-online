@@ -31,8 +31,11 @@ int main(int argc, char** argv){
 
   CaenParameter root = dig.GetRootParameter();
   auto numchPar = root.GetChildAt("/par/numch");
-  std::cout << "number of channels: "<< numchPar.Get() << std::endl;
-  std::cout << "number of bits: "<< root.GetChildAt("/par/adc_nbit").Get() << std::endl;
+  std::cout << "number of channels: "<< static_cast<int64_t>(numchPar) << std::endl;
+  std::cout << "number of bits: "<< root["/par/adc_nbit"].Get() << std::endl;
+
+  numchPar = (int64_t)10; // will fail because is readonly
+  numchPar = "abc"; // will fail because is readonly
 
   root.Print(true);
 

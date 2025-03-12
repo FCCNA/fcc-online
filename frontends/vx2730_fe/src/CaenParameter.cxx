@@ -157,6 +157,65 @@ void CaenParameter::Set(const std::string &value){
   }
 }
 
+CaenParameter::operator std::string(){
+  //should check type is String
+  return Get();
+}
+
+CaenParameter::operator bool(){
+  //should check type is Boolean
+  return (Get()=="True")? true : false;  
+}
+
+CaenParameter::operator int64_t(){
+  //should check type is Integer
+  return stoi(Get());
+}
+
+CaenParameter::operator uint64_t(){
+  //should check type is Positive
+  return stoul(Get());
+}
+
+CaenParameter::operator double(){
+  //should check type is Floting
+  return stod(Get());
+}
+
+void CaenParameter::operator=(const std::string& val){
+  //should check accessmode is ReadWrite
+  //should check type is String
+  Set(val);
+}
+
+void CaenParameter::operator=(const bool& val){
+  //should check accessmode is ReadWrite
+  //should check type is Boolean
+  if(val){
+    Set("True");
+  } else {
+    Set("False");
+  }
+}
+
+void CaenParameter::operator=(const int64_t& val){
+  //should check accessmode is ReadWrite
+  //should check type is Integer
+  Set(std::to_string(val));
+}
+
+void CaenParameter::operator=(const uint64_t& val){
+  //should check accessmode is ReadWrite
+  //should check type is Positive
+  Set(std::to_string(val));
+}
+
+void CaenParameter::operator=(const double& val){
+  //should check accessmode is ReadWrite
+  //should check type is Floating
+  Set(std::to_string(val));
+}
+
 //print
 std::string CaenParameter::to_string(CAEN_FELib_NodeType_t type){
   switch(type){

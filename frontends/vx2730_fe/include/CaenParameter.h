@@ -54,6 +54,32 @@ class CaenParameter {
       std::string Get();
       void Set(const std::string &value);
 
+      //getters for attributes
+      AccessMode GetAccessMode() const noexcept {
+        return accessmod;
+      }
+      DataType GetDataType() const noexcept {
+        return dtype;
+      }
+
+      // conversion operators
+      explicit operator std::string(); //value get for string parameters
+      explicit operator bool(); //value get for boolean parameters
+      explicit operator int64_t(); //value get for integer parameters
+      explicit operator uint64_t(); //value get for positive number parameters
+      explicit operator double(); //value get for floating number parameters
+
+      // map GetChildAt to the [] operator
+      CaenParameter operator[](const std::string &path) const { return GetChildAt(path); }
+
+      // assignment operators
+      void operator=(const std::string& val); //value set for string parameters
+      void operator=(const bool& val); //value set for boolean parameters
+      void operator=(const int64_t& val); //value set for integer parameters
+      void operator=(const uint64_t& val); //value set for positive numeber parameters
+      void operator=(const double& val); //value set for floating number parameters
+
+      //Print node and subtree
       void Print(bool recurse = false);
       static std::string to_string(CAEN_FELib_NodeType_t type);
       static std::string to_string(AccessMode mode);
