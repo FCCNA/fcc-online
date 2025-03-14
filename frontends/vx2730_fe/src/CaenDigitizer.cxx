@@ -42,6 +42,35 @@ bool CaenDigitizer::IsConnected() {
     return connected;
 }
 
+void CaenDigitizer::ConfigureEndpoint(std::unique_ptr<CaenEndpoint> endpoint){
+  if(!connected) //Digitizer have to be connected otherwise just drop the endpoint
+    return;
+
+  endpt = std::move(endpoint);
+
+  uint64_t ep_handle;
+  std::string full_endpoint_path = "/endpoint/" + endpt->GetNameString();
+  int ret = CAEN_FELib_GetHandle(dev_handle, full_endpoint_path.c_str(), &ep_handle);
+  if (ret != CAEN_FELib_Success) {
+    throw CaenException(ret);
+  }
+
+	ret = CAEN_FELib_SetValue(dev_handle, "/endpoint/par/activeendpoint", endpt->GetName());
+  if (ret != CAEN_FELib_Success) {
+    throw CaenException(ret);
+  }
+
+	ret = CAEN_FELib_SetReadDataFormat(ep_handle, endpt->GetFormat());
+  if (ret != CAEN_FELib_Success) {
+    throw CaenException(ret);
+  }
+
+  endpoint->dgtz = weak_from_this();
+  endpoint->ep_handle = ep_handle;
+
+  endpoint->Configure();
+}
+
 void CaenDigitizer::RunCmd(std::string cmd) {
     std::string full_cmd_path = "/cmd/" + cmd;
     int result = CAEN_FELib_SendCommand(dev_handle, full_cmd_path.c_str());

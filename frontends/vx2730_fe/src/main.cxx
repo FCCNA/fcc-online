@@ -39,6 +39,8 @@ int main(int argc, char** argv){
 
   root.Print(true);
 
+  dig.ConfigureEndpoint(std::make_unique<CaenRawEndpoint>());
+
   /*std::vector<CaenParameter> v = root.GetChilds();
   for(auto & p :v){
     std::cout << "hei midas, creami " << p.GetName() <<std::endl;
