@@ -9,7 +9,7 @@
 
 class CaenDigitizer: public std::enable_shared_from_this<CaenDigitizer>{
 public:
-    CaenDigitizer();
+    static std::shared_ptr<CaenDigitizer> MakeNewDigitizer();
     ~CaenDigitizer();
 
     void Connect(std::string hostname, std::string protocol = "Dig2:");
@@ -28,6 +28,7 @@ public:
     void WriteCmd(const std::string &cmd);
 
 private:
+    CaenDigitizer();
     bool connected = false;
     uint64_t dev_handle = 0;
     std::string dev_path;

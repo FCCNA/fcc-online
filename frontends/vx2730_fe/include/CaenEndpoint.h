@@ -2,8 +2,10 @@
 #define CAEN_ENDPOINT_H
 
 #include <memory>
+#include <string>
 
 class CaenDigitizer;
+class CaenData;
 
 //base class
 class CaenEndpoint {
@@ -13,14 +15,14 @@ class CaenEndpoint {
 
       //timeout setters
       void SetTimeout(int value) noexcept { timeout = value; }
-      int GetTimeout() noexcept const { return timeout; }
+      int GetTimeout() const noexcept { return timeout; }
 
       std::string GetNameString() const noexcept { return name; }
       const char* GetName() const noexcept { return name.c_str(); }
       const char* GetFormat() const noexcept { return format.c_str(); }
 
-      //bool HasData() const { return true; }
-      //std::unique_ptr<CaenData> ReadData() {}
+      bool HasData(); //checks wheter data is available
+      virtual std::unique_ptr<CaenData> ReadData() ;
 
       friend class CaenDigitizer;
 
@@ -29,7 +31,7 @@ class CaenEndpoint {
       const std::string format;
       int timeout = 500; //timeout in ms
       std::weak_ptr<CaenDigitizer> dgtz;
-      uint64_t ep_handle;
+      uint64_t ep_handle = 0;
       virtual void Configure() {}; //called by CaenDigitizer once equipment is installed
 };
 
@@ -38,9 +40,11 @@ class CaenRawEndpoint : public CaenEndpoint{
   public:
     CaenRawEndpoint(): CaenEndpoint("raw", "") {};
     virtual ~CaenRawEndpoint() noexcept {};
+    std::unique_ptr<CaenData> ReadData() final;
 
   protected:
-    void Configure() {}; //this should fetch max_raw_bytes_per_read 
+    uint64_t maxrawdatasize;
+    void Configure();
 };
 
 // scope impementation
@@ -53,9 +57,12 @@ class CaenScopeEndpoint : public CaenEndpoint{
                                                   { \"name\" : \"FLAGS\", \"type\" : \"U16\" } \
                                                 ]") {};
     virtual ~CaenScopeEndpoint() noexcept {};
+    std::unique_ptr<CaenData> ReadData() final;
 
   protected:
-    void Configure() {}; //this should fetch nchannel e nsample per channel
+    uint64_t numch;
+    uint64_t recordlengths;
+    void Configure();
 };
 
 #endif

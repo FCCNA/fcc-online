@@ -11,7 +11,7 @@
 
 class CaenDigitizerMidas {
 private:
-    CaenDigitizer digitizer;
+    std::shared_ptr<CaenDigitizer> digitizer;
     midas::odb fOdbSettings{};
     midas::odb fOdbVariables{};
 

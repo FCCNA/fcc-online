@@ -151,6 +151,7 @@ std::string CaenParameter::Get(){
   return std::string(value);
 }
 void CaenParameter::Set(const std::string &value){
+  //std::cout << "Setting " << name << " to '" << value << "'" << std::endl;
   int ret = CAEN_FELib_SetValue(handle, nullptr, value.data());
   if(ret != CAEN_FELib_Success){
     throw CaenException(ret);
@@ -182,6 +183,12 @@ CaenParameter::operator double(){
   return stod(Get());
 }
 
+void CaenParameter::operator=(const char* val){
+  //should check accessmode is ReadWrite
+  //should check type is String
+  Set(std::string(val));
+}
+
 void CaenParameter::operator=(const std::string& val){
   //should check accessmode is ReadWrite
   //should check type is String
@@ -196,6 +203,12 @@ void CaenParameter::operator=(const bool& val){
   } else {
     Set("False");
   }
+}
+
+void CaenParameter::operator=(const int& val){
+  //should check accessmode is ReadWrite
+  //should check type is Integer
+  Set(std::to_string(val));
 }
 
 void CaenParameter::operator=(const int64_t& val){

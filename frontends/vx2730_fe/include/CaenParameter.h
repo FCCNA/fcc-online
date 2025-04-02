@@ -73,8 +73,10 @@ class CaenParameter {
       CaenParameter operator[](const std::string &path) const { return GetChildAt(path); }
 
       // assignment operators
+      void operator=(const char* val); //value set for string parameters, from c-style strings
       void operator=(const std::string& val); //value set for string parameters
       void operator=(const bool& val); //value set for boolean parameters
+      void operator=(const int& val); //value set for integer parameters, from c++ int
       void operator=(const int64_t& val); //value set for integer parameters
       void operator=(const uint64_t& val); //value set for positive numeber parameters
       void operator=(const double& val); //value set for floating number parameters

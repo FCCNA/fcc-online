@@ -32,22 +32,24 @@ CaenDigitizerMidas::CaenDigitizerMidas() {
     fOdbVariables.connect("/Equipment/EquipmentGaudino/Variables");
     fOdbVariables["Channel Status"].resize(DOG_NCHANNEL);
     fOdbVariables["Channel Info"].resize(DOG_NCHANNEL);
+
+    digitizer = CaenDigitizer::MakeNewDigitizer();
 }
 
 void CaenDigitizerMidas::Connect(std::string hostname, std::string protocol) {
-    digitizer.Connect(hostname, protocol);
+    digitizer->Connect(hostname, protocol);
 }
 
 void CaenDigitizerMidas::Disconnect() {
-    digitizer.Disconnect();
+    digitizer->Disconnect();
 }
 
 bool CaenDigitizerMidas::IsConnected() {
-    return digitizer.IsConnected();
+    return digitizer->IsConnected();
 }
 
 void CaenDigitizerMidas::RunCmd(std::string cmd) {
-    digitizer.RunCmd(cmd);
+    digitizer->RunCmd(cmd);
 }
 
 void CaenDigitizerMidas::StateCallback(midas::odb &o) {

@@ -34,6 +34,7 @@ target_include_directories(CAEN_FELib PUBLIC caen-felib/include caen-felib/src)
 set(LIBDIGITIZER_SRC
   src/CaenDigitizer.cxx
   src/CaenException.cxx
+  src/CaenEndpoint.cxx
   src/CaenParameter.cxx
 )
 

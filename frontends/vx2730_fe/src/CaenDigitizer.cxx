@@ -2,7 +2,13 @@
 #include "CaenException.h"
 #include <stdexcept>
 
+std::shared_ptr<CaenDigitizer> CaenDigitizer::MakeNewDigitizer() {
+  //return std::make_shared<CaenDigitizer>();
+  return std::shared_ptr<CaenDigitizer>(new CaenDigitizer());
+}
+
 CaenDigitizer::CaenDigitizer() {}
+
 
 CaenDigitizer::~CaenDigitizer() {
     if (connected) {
@@ -47,6 +53,7 @@ void CaenDigitizer::ConfigureEndpoint(std::unique_ptr<CaenEndpoint> endpoint){
     return;
 
   endpt = std::move(endpoint);
+  //std::cout << "Endpoint Moved" << std::endl;
 
   uint64_t ep_handle;
   std::string full_endpoint_path = "/endpoint/" + endpt->GetNameString();
@@ -54,21 +61,25 @@ void CaenDigitizer::ConfigureEndpoint(std::unique_ptr<CaenEndpoint> endpoint){
   if (ret != CAEN_FELib_Success) {
     throw CaenException(ret);
   }
+  //std::cout << "Got endpoint handle" << std::endl;
 
 	ret = CAEN_FELib_SetValue(dev_handle, "/endpoint/par/activeendpoint", endpt->GetName());
   if (ret != CAEN_FELib_Success) {
     throw CaenException(ret);
   }
+  //std::cout << "ActiveEndpoint Value set" << std::endl;
 
 	ret = CAEN_FELib_SetReadDataFormat(ep_handle, endpt->GetFormat());
   if (ret != CAEN_FELib_Success) {
     throw CaenException(ret);
   }
+  //std::cout << "ReadDataFormat set" << std::endl;
 
-  endpoint->dgtz = weak_from_this();
-  endpoint->ep_handle = ep_handle;
+  auto test = weak_from_this();
+  endpt->dgtz = weak_from_this();
+  endpt->ep_handle = ep_handle;
 
-  endpoint->Configure();
+  endpt->Configure();
 }
 
 void CaenDigitizer::RunCmd(std::string cmd) {
