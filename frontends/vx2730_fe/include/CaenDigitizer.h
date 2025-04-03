@@ -4,6 +4,7 @@
 #include "CaenException.h"
 #include "CaenParameter.h"
 #include "CaenEndpoint.h"
+#include "CaenData.h"
 #include <string>
 #include <memory>
 
@@ -25,7 +26,11 @@ public:
     void ConfigureEndpoint(std::unique_ptr<CaenEndpoint> endpoint);
 
     void RunCmd(std::string cmd);
-    void WriteCmd(const std::string &cmd);
+
+    void Start();
+    bool IsEndpointRunning();
+    bool HasData();
+    std::unique_ptr<CaenData> ReadData();
 
 private:
     CaenDigitizer();

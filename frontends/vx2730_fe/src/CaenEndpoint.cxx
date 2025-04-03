@@ -3,19 +3,28 @@
 #include <CaenDigitizer.h>
 #include <iostream>
 
+bool CaenEndpoint::ParseReturnCode(int code){
+  if (code == CAEN_FELib_Success)
+    return true;
+  else if (code == CAEN_FELib_Timeout)
+    return false;
+  else if (code == CAEN_FELib_Stop){
+    status = ReadoutStatus::Stopped;
+    return false;
+  } else {
+    throw CaenException(code);
+  }
+
+}
+
+void CaenEndpoint::Start() noexcept {
+    status = ReadoutStatus::Running;
+}
+
 bool CaenEndpoint::HasData(){
   if(ep_handle){
     int ret = CAEN_FELib_HasData(ep_handle, timeout);
-    if (ret == CAEN_FELib_Success)
-      return true;
-    else if (ret == CAEN_FELib_Timeout)
-      return false;
-    else if (ret == CAEN_FELib_Stop){
-      //stop_rreceived = true;
-      return false;
-    } else {
-      throw CaenException(ret);
-    }
+    return ParseReturnCode(ret);
   }
 
   return false;
@@ -36,7 +45,27 @@ void CaenRawEndpoint::Configure() {
 }
 
 std::unique_ptr<CaenData> CaenRawEndpoint::ReadData() {
-  return std::make_unique<CaenRawData>(maxrawdatasize);
+  auto event = std::make_unique<CaenRawData>(maxrawdatasize);
+
+  auto ret = CAEN_FELib_ReadData(ep_handle, timeout,
+                                 event->data.data(),
+                                 &event->size,
+                                 &event->nevents
+                                );
+
+
+  // Raw endpoint does not handle start and stop events
+  if(ret == CAEN_FELib_Success){
+    if(event->data[0]== 0x32){
+      //stop received
+      status = ReadoutStatus::Stopped;
+    }
+  }
+
+  if(ParseReturnCode(ret))
+    return event;
+  else
+    return std::make_unique<CaenRawData>(1);
 }
 
 void CaenScopeEndpoint::Configure() {
@@ -51,5 +80,18 @@ void CaenScopeEndpoint::Configure() {
 }
 
 std::unique_ptr<CaenData> CaenScopeEndpoint::ReadData() {
-  return std::make_unique<CaenScopeData>(numch, recordlengths);
+  auto event = std::make_unique<CaenScopeData>(numch, recordlengths);
+  auto ret = CAEN_FELib_ReadData(ep_handle, timeout,
+                                 &event->timestamp,
+                                 &event->trigger_id,
+                                 event->waveform.data(),
+                                 event->waveform_size.data(),
+                                 &event->flags
+                                );
+
+
+  if(ParseReturnCode(ret))
+    return event;
+  else
+    return std::make_unique<CaenScopeData>(numch, 0);
 }

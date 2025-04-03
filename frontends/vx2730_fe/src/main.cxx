@@ -1,5 +1,43 @@
 #include "CaenDigitizer.h"
 #include <iostream>
+#include <fstream>
+#include <thread>
+
+void ReadoutFunction(std::shared_ptr<CaenDigitizer> dig){
+  //open output file
+  std::ofstream ofs("output.txt", std::ofstream::out);
+
+  //Wait start 
+  while(!dig->IsEndpointRunning()){
+    std::this_thread::yield();
+  }
+
+  while(dig->IsEndpointRunning()){
+    if(dig->HasData()){
+      auto data = dig->ReadData();
+      std::cout << "Event Received" << std::endl;
+      data->Print();
+      auto decodeddata = dynamic_cast<CaenScopeData*>(data.get());
+      if(decodeddata){
+        int iCh=0;
+        for(auto samples: decodeddata->waveform_size){
+          ofs << decodeddata->trigger_id << ", " << iCh;
+          for(int iSample=0; iSample<samples; iSample++){
+            ofs << ", " << decodeddata->waveform[iCh][iSample];
+          }
+          ofs << std::endl;
+          iCh++;
+        }
+      }
+       
+    } else {
+      std::cout << "Timeout" << std::endl;
+    }
+    std::this_thread::yield();
+  }
+
+  std::cout << "Stop Received, closing readout thread" << std::endl;
+}
 
 int main(int argc, char** argv){
   //CaenDigitizer dig;
@@ -61,8 +99,33 @@ int main(int argc, char** argv){
   dig->ConfigureEndpoint(std::make_unique<CaenScopeEndpoint>());
   std::cout << "Endpoint configured" << std::endl;
 
+  std::thread readoutThread(ReadoutFunction, dig);
+  std::cout << "Radout Thread Started" << std::endl;
+
   dig->RunCmd("armacquisition");
+  std::cout << "Acquisition Started" << std::endl;
+  auto acqstatusParameter = root["/par/AcquisitionStatus"];
+  uint64_t acqstatus;
+  do{
+    acqstatus = (uint64_t)acqstatusParameter;
+    std::cout << "acquisition status: 0x" << std::hex<< acqstatus << std::dec << std::endl;
+  } while((acqstatus&0x1) == 0x0);
+
   dig->RunCmd("swstartacquisition");
+  do{
+    acqstatus = (uint64_t)acqstatusParameter;
+    std::cout << "acquisition status: 0x" << std::hex<< acqstatus << std::dec << std::endl;
+  } while((acqstatus&0x2) == 0x0);
+  dig->Start();
+  std::cout << "Run Started" << std::endl;
+  
+  std::string l;
+  std::getline(std::cin, l);
+
+  dig->RunCmd("swstopacquisition");
+
+  readoutThread.join();
+  dig->RunCmd("disarmacquisition");
 
   return 0;
 }

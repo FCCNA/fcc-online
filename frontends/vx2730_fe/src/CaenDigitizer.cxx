@@ -90,3 +90,35 @@ void CaenDigitizer::RunCmd(std::string cmd) {
         throw CaenException(result);
     }
 }
+
+void CaenDigitizer::Start(){
+  if(endpt)
+    endpt->Start();
+  
+}
+
+bool CaenDigitizer::IsEndpointRunning(){
+  if(endpt){
+    auto status = endpt->GetReadoutStatus();
+    if(status == CaenEndpoint::ReadoutStatus::Running){
+      return true;
+    } else {
+      return false;
+    }
+  } else
+    return false;
+}
+
+bool CaenDigitizer::HasData(){
+  if(endpt)
+    return endpt->HasData();
+
+  return false;
+}
+
+std::unique_ptr<CaenData> CaenDigitizer::ReadData(){
+  if(endpt)
+    return endpt->ReadData();
+
+  return std::unique_ptr<CaenData>{};
+}
