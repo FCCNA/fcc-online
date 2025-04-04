@@ -7,44 +7,44 @@
 #include "odbxx.h"
 #include "CaenDigitizer.h"
 
-#define DOG_NCHANNEL 32
-
 class CaenDigitizerMidas {
 private:
     std::shared_ptr<CaenDigitizer> digitizer;
+
     midas::odb fOdbSettings{};
     midas::odb fOdbVariables{};
+    midas::odb fOdbStatus{};
 
-    bool fChannelEnabled[DOG_NCHANNEL];
-    float fChannelScale[DOG_NCHANNEL];
-    float fChannelPosition[DOG_NCHANNEL];
-    float fChannelOffset[DOG_NCHANNEL];
-    float fChannelBandwidth[DOG_NCHANNEL];
-    std::string fChannelStatus[DOG_NCHANNEL];
-    std::string fChannelInfo[DOG_NCHANNEL];
+    //odb keys for watch
+    midas::odb fOdbDigitizerSettings;
+    midas::odb fOdbDigitizerStatus;
+    std::vector<midas::odb> fOdbChannelSettings;
 
-    float fHorizontalScale;
-    float fHorizontalPosition;
-    float fHorizontalSampleRate;
-    std::string fAcquisitionMode;
+    const int fFrontendIndex;
+    const EQUIPMENT* fMidasEquipment;
+
+    void parameterToOdb(midas::odb& odb, CaenParameter& param);
+    void odbToParameter(CaenParameter& param, midas::odb& odb);
 
 public:
-    CaenDigitizerMidas();
+    CaenDigitizerMidas(int index, EQUIPMENT* eq);
+    void Sync(); //populate ODB with parameters
 
-    void Connect(std::string hostname, std::string protocol);
-    void Disconnect();
-    bool IsConnected();
-    void RunCmd(std::string cmd);
+    //EUDAQ-style transitions
+    enum class DaqState {Uninitialized, Unconfigured, Configured, Running, Error};
+    DaqState state = DaqState::Uninitialized;
 
-    void QueryState();
-    void Start();
-    void Stop();
-    bool HasEvent();
-    bool ReadData();
-    void AlignODB();
+    INT Initialize();
+    INT Terminate();
+    INT Configure();
+    INT StartRun();
+    INT StopRun();
 
-    void StateCallback(midas::odb &o);
-    void SetupCallback();
+    INT HasData();
+    INT ReadData(char* pevent);
+
+    void SettingsCallback(midas::odb &o);
+    void ChannelCallback(int channel, midas::odb &o);
 };
 
 #endif // CAEN_DIGITIZER_MIDAS_H
