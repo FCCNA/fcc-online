@@ -4,7 +4,7 @@ project(camehv_fe)
 # Typical system types are SY1527 and SY4527.
 # See CAENHV_SYSTEM_TYPE_t in CAENHVWrapper.h for the full list.
 if (NOT DEFINED SYSTEM_TYPE)
-    set(SYSTEM_TYPE SY1470)
+  set(SYSTEM_TYPE N1470)
 endif()
 
 # Check for MIDASSYS environment variable

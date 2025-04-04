@@ -13,8 +13,6 @@
  *   experiment.
  */
 
-#define SYSTEM_TYPE N1470
-
 /*-- Globals -------------------------------------------------------*/
 
 /* The frontend name (client name) as seen by other MIDAS clients   */
@@ -60,10 +58,9 @@ INT read_event(char *pevent, INT off);
 
 /*-- Equipment list ------------------------------------------------*/
 #undef USE_INT
-#define EQUIP_NAME "caen_hv"
 
 EQUIPMENT equipment[] = {
-      { EQUIP_NAME, /* equipment name */
+      { "caen_hv%02d", /* equipment name */
          { 400, 0, /* event ID, trigger mask */
          "SYSTEM", /* write events to system buffer */
          EQ_PERIODIC, /* equipment type */
@@ -100,7 +97,7 @@ INT frontend_init() {
 
    // Now set up the crate/ODB.
    // See CAENHV_SYSTEM_TYPE_t in CAENHVWrapper.h for allowed values of 3rd param.
-   return hv.frontend_init(EQUIP_NAME, hDB, SYSTEM_TYPE);
+   return hv.frontend_init(equipment[0].name, hDB, SYSTEM_TYPE);
 }
 
 INT frontend_exit() {
