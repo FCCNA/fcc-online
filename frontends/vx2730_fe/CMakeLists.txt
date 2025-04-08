@@ -36,6 +36,7 @@ set(LIBDIGITIZER_SRC
   src/CaenException.cxx
   src/CaenEndpoint.cxx
   src/CaenParameter.cxx
+  src/CaenData.cxx
 )
 
 set(INCDIRS

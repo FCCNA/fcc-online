@@ -2,7 +2,7 @@
 #define CAEN_DATA_H
 
 #include <vector>
-#include <iostream>
+#include <stdint.h>
 
 //base class
 class CaenData {
@@ -10,6 +10,7 @@ class CaenData {
       CaenData() {};
       virtual ~CaenData() noexcept {};
       virtual void Print() noexcept {};
+      virtual uint64_t Serialize(uint8_t* ptr, uint64_t maxsize=0) { return 0; };
 };
 
 // raw implementation
@@ -21,7 +22,8 @@ class CaenRawData : public CaenData{
     CaenRawData(uint64_t maxsize): CaenData(), data(maxsize) {};
     virtual ~CaenRawData() noexcept {};
 
-    void Print() noexcept final { std::cout << "Raw Event with " << nevents << " subevents, size " << size << std::endl; };
+    void Print() noexcept final;
+    uint64_t Serialize(uint8_t* ptr, uint64_t maxsize=0) final;
 };
 
 // scope impementation
@@ -49,12 +51,8 @@ class CaenScopeData : public CaenData{
       }
     };
 
-    void Print() noexcept final { 
-      std::cout << "Scope Event "<< trigger_id <<" (flags=0x"<<std::hex <<flags << std::dec << ")with sizes ";
-      for(auto size : waveform_size)
-        std::cout << size << " ";
-      std::cout << std::endl; 
-    };
+    void Print() noexcept final;
+    uint64_t Serialize(uint8_t* ptr, uint64_t maxsize=0) final;
 };
 
 #endif

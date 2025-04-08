@@ -113,11 +113,17 @@ INT CaenDigitizerMidas::Initialize() {
     return FE_ERR_ODB;
   }
 
+  //start Sync thread
+  runSyncThread = true;
+  syncThread = std::thread(std::bind(&CaenDigitizerMidas::SyncThreadFunction, this));
+
   state = DaqState::Unconfigured;
   return SUCCESS;
 }
 
 INT CaenDigitizerMidas::Terminate() {
+  runSyncThread = false;
+  syncThread.join();
   digitizer->Disconnect();
   state = DaqState::Uninitialized;
   return SUCCESS;
@@ -145,7 +151,8 @@ INT CaenDigitizerMidas::Configure() {
 
   //setup endpoints
   try{
-    digitizer->ConfigureEndpoint(std::make_unique<CaenRawEndpoint>());
+    //digitizer->ConfigureEndpoint(std::make_unique<CaenRawEndpoint>());
+    digitizer->ConfigureEndpoint(std::make_unique<CaenScopeEndpoint>());
     digitizer->RunCmd("armacquisition");
   } catch(CaenException &ex){
     std::cout << "Error configuring endpoint" <<std::endl;
@@ -207,17 +214,18 @@ INT CaenDigitizerMidas::ReadData(char* pevent) {
   }
 
   auto data = digitizer->ReadData();
-  auto rawdata = static_cast<CaenRawData*>(data.get());
+  //auto rawdata = dynamic_cast<CaenRawData*>(data.get());
 
   /* init bank structure */
   bk_init32(pevent);
 
   /* create a bank called ADC0 */
-  UINT32 *pdata;
-  bk_create(pevent, "W000", TID_UINT32, (void **)&pdata);
+  UINT8 *pdata;
+  char bkname[5] = "RAW0";
+  bkname[3] += fFrontendIndex%10;
+  bk_create(pevent, "RAW0", TID_UINT8, (void **)&pdata);
 
-  memcpy(pdata, rawdata->data.data(), rawdata->size);
-  pdata += rawdata->size;
+  pdata += data->Serialize((uint8_t*)pdata);
 
   bk_close(pevent, pdata);
 
@@ -263,4 +271,13 @@ void CaenDigitizerMidas::Sync() {
     }
     fOdbChannelSettings[i].set_trigger_hotlink(true);
   }
+}
+
+void CaenDigitizerMidas::SyncThreadFunction() {
+  std::cout << "sync thread running"<< std::endl;
+  while(runSyncThread){
+    Sync();
+    std::this_thread::sleep_for(10s);
+  }
+  std::cout << "stop sync thread"<< std::endl;
 }

@@ -235,7 +235,7 @@ INT read_trigger_event(char *pevent, INT off)
 
 INT read_periodic_event(char *pevent, INT off)
 {
-  digitizer->Sync();
+  //digitizer->Sync();
   return 0;
 }
 

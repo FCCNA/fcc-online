@@ -2,10 +2,14 @@
 #define CAEN_DIGITIZER_MIDAS_H
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "midas.h"
 #include "msystem.h"
 #include "odbxx.h"
 #include "CaenDigitizer.h"
+
+using namespace std::chrono_literals;
 
 class CaenDigitizerMidas {
 private:
@@ -19,6 +23,11 @@ private:
     midas::odb fOdbDigitizerSettings;
     midas::odb fOdbDigitizerStatus;
     std::vector<midas::odb> fOdbChannelSettings;
+
+    //thread to call Sync() periodically
+    std::atomic<bool> runSyncThread;
+    std::thread syncThread;
+    void SyncThreadFunction();
 
     const int fFrontendIndex;
     const EQUIPMENT* fMidasEquipment;
