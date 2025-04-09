@@ -101,36 +101,6 @@ EQUIPMENT equipment[] = {
 /********************************************************************\
                   Frontend callback routines
 
-  The function frontend_init gets called when the frontend program
-  is started. This routine should initialize the hardware, and can
-  optionally install several callback functions:
-
-  install_poll_event:
-     Install a function which gets called to check if a new event is
-     available for equipment of type EQ_POLLED.
-
-  install_frontend_exit:
-     Install a function which gets called when the frontend program
-     finishes.
-
-   install_begin_of_run:
-      Install a function which gets called when a new run gets started.
-
-   install_end_of_run:
-      Install a function which gets called when a new run gets stopped.
-
-   install_pause_run:
-      Install a function which gets called when a new run gets paused.
-
-   install_resume_run:
-      Install a function which gets called when a new run gets resumed.
-
-   install_frontend_loop:
-      Install a function which gets called inside the main event loop
-      as often as possible. This function gets all available CPU cycles,
-      so in order not to take 100% CPU, this function can use the
-      ss_sleep(10) function to give up some CPU cycles.
-
  \********************************************************************/
 
 /*-- Frontend Init -------------------------------------------------*/
@@ -159,6 +129,37 @@ INT frontend_init()
   if(ret != SUCCESS)
     return ret;
   
+  digitizer->AutoSyncParameter("acquisitionstatus");
+  digitizer->AutoSyncParameter("realtimemonitor");
+  digitizer->AutoSyncParameter("deadtimemonitor");
+  digitizer->AutoSyncParameter("livetimemonitor");
+  digitizer->AutoSyncParameter("triggercnt");
+  digitizer->AutoSyncParameter("losttriggercnt");
+  digitizer->AutoSyncParameter("tempsensairin");
+  digitizer->AutoSyncParameter("tempsensairout");
+  digitizer->AutoSyncParameter("tempsenscore");
+  digitizer->AutoSyncParameter("tempsensfirstadc");
+  digitizer->AutoSyncParameter("tempsenshottestadc");
+  digitizer->AutoSyncParameter("tempsensadc0");
+  digitizer->AutoSyncParameter("tempsensadc1");
+  digitizer->AutoSyncParameter("tempsensadc2");
+  digitizer->AutoSyncParameter("tempsensadc3");
+  digitizer->AutoSyncParameter("tempsensadc4");
+  digitizer->AutoSyncParameter("tempsensadc5");
+  digitizer->AutoSyncParameter("tempsensadc6");
+  digitizer->AutoSyncParameter("tempsensadc7");
+  digitizer->AutoSyncParameter("tempsensdcdc");
+  digitizer->AutoSyncParameter("vinsensdcdc");
+  digitizer->AutoSyncParameter("voutsensdcdc");
+  digitizer->AutoSyncParameter("ioutsensdcdc");
+  digitizer->AutoSyncParameter("errorflags");
+  digitizer->AutoSyncParameter("boardready");
+
+  digitizer->AutoSyncChannelParameter("selftrgrate");
+  digitizer->AutoSyncChannelParameter("chstatus");
+  digitizer->AutoSyncChannelParameter("gainfactor");
+  digitizer->AutoSyncChannelParameter("adctovolts");
+
   // this is if using EQ_USER
   /* create a ring buffer for each thread */
   //create_event_rb(0);
@@ -221,6 +222,7 @@ INT resume_run(INT run_number, char *error)
 
 INT frontend_loop()
 {
+    ss_sleep(10);
     return SUCCESS;
 }
 

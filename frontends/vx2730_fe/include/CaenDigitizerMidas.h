@@ -35,9 +35,12 @@ private:
     void parameterToOdb(midas::odb& odb, CaenParameter& param);
     void odbToParameter(CaenParameter& param, midas::odb& odb);
 
+    std::vector<std::string> parametersToSync;
+    std::vector<std::string> channelParametersToSync;
+
 public:
     CaenDigitizerMidas(int index, EQUIPMENT* eq);
-    void Sync(); //populate ODB with parameters
+    void Sync(bool all=true); //populate ODB with parameters
 
     //EUDAQ-style transitions
     enum class DaqState {Uninitialized, Unconfigured, Configured, Running, Error};
@@ -54,6 +57,14 @@ public:
 
     void SettingsCallback(midas::odb &o);
     void ChannelCallback(int channel, midas::odb &o);
+
+    void AutoSyncParameter(const std::string& name){
+      parametersToSync.push_back("/par/"+name);
+    }
+
+    void AutoSyncChannelParameter(const std::string& name){
+      channelParametersToSync.push_back("/par/"+name);
+    }
 };
 
 #endif // CAEN_DIGITIZER_MIDAS_H
