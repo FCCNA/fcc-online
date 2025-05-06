@@ -35,6 +35,7 @@ float temperature_bme;
 float pressure_bme;
 float humidity_bme;
 
+bool sht_measurement;
 float temperature_sht;
 float humidity_sht;
 
@@ -57,6 +58,7 @@ void setup() {
 
   //begin sht
   sht.begin();
+  sht_measurement = false;
 
   //Start timers
   timer_measurement.start(measurement_ms);
@@ -77,36 +79,51 @@ void loop() {
     timer_measurement.stop();
     //trigger a BME680 read
     unsigned long endTime = bme.beginReading();
-    //if (endTime == 0) {
-    //  Serial.println(F("Failed to begin reading :("));
-    //  return;
-    //}
-    sht.requestData();
+    if (endTime == 0) {
+      temperature_bme = -999;
+      pressure_bme = -999;
+      humidity_bme = -999;
+    }
+    //trigger a SHT31 read
+    if (! sht.requestData()){
+      temperature_sht = -999;
+      humidity_sht = -999;
+    } else {
+      sht_measurement = true;
+    }
 
     digitalWrite(LED_BUILTIN, HIGH);
     timer_measurement.start(measurement_ms);
   }
 
   // save a concluded measurement
-  if (bme.endReading()) {
-    digitalWrite(LED_BUILTIN, LOW);
-    temperature_bme = bme.temperature;
-    pressure_bme = bme.pressure / 100.0;
-    humidity_bme = bme.humidity;
+  if(bme.remainingReadingMillis() == 0){
+    if(bme.endReading()) {
+      digitalWrite(LED_BUILTIN, LOW);
+     temperature_bme = bme.temperature;
+      pressure_bme = bme.pressure / 100.0;
+      humidity_bme = bme.humidity;
+    } else {
+      temperature_bme = -999;
+      pressure_bme = -999;
+      humidity_bme = -999;
+    }
   }
 
   // save a concluded measurement
-  if(sht.dataReady()){
+  if(sht.dataReady() && sht_measurement){
     bool success  = sht.readData(); 
     if (success == false)
     {
-      //Serial.println("SHT Failed read");
+      temperature_sht = -999;
+      humidity_sht = -999;
     }
     else
     {
       temperature_sht = sht.getTemperature();
       humidity_sht = sht.getHumidity();
     }
+    sht_measurement = false;
   }
 
   //check serial
