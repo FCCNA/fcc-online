@@ -152,23 +152,37 @@ class LaudaEquipment(midas.frontend.EquipmentBase):
         #trigger a feedback to control temperature in the box
         if self.client.odb_get(f'{self.odb_settings_dir}/Feedback'):
 
-            pid = PID(0.2, 0., 50., self.client.odb_get(f"{self.odb_settings_dir}/Demand Feedback"))
-            pid.output_limits = (-6., 6.)
+            if self.client.odb_get("/Equipment/ArduinoEquipment/Variables/ARD0[0]")>0:
+                pid = PID(0.2, 0., 50., self.client.odb_get(f"{self.odb_settings_dir}/Demand Feedback"))
+                pid.output_limits = (-6., 6.)
+                
+                tbox = self.client.odb_get("/Equipment/ArduinoEquipment/Variables/ARD0[0]")
+                output = pid(tbox)
 
-            tbox = self.client.odb_get("/Equipment/ArduinoEquipment/Variables/ARD0[0]")
+                if (setpoint_temperature + output) < 4:
+                    tset = 4
+                else:
+                    tset = setpoint_temperature + output
+                    
+                self.client.odb_set(f"{self.odb_settings_dir}/SetPoint", tset)                
 
-            output = pid(tbox)
+                setpoint_temperature += output
 
-            self.client.odb_set(f"{self.odb_settings_dir}/SetPoint", setpoint_temperature + output)                
+            # ARD0[0] = -999 if a commnication error occurs, in that case the feedback is stopped    
+            else:
+                new_temp = self.client.odb_get("/Equipment/LaudaEquipment/Settings/Demand Feedback")
 
-            setpoint_temperature += output
+                self.client.odb_set("/Equipment/LaudaEquipment/Settings/Feedback", False)
+                self.client.odb_set("/Equipment/LaudaEquipment/Settings/SetPoint", new_temp)
+                
+                self.client.msg("Feedback stopped, temperature set to the feedback demand %s" % str(new_temp), is_error = True)
 
         # Create an event
         event = midas.event.Event()
 
         # Create a bank (called "LAU0") which in this case will store 4 floats.
         # data can be a list, a tuple or a numpy array.
-        data = [bath_temperature, status, cooling_state, setpoint_temperature]
+        data = [bath_temperature, status, cooling_state, tset]# setpoint_temperature]
 
         event.create_bank("LAU0", midas.TID_FLOAT, data)
 
