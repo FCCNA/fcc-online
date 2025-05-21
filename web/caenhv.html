@@ -6,6 +6,8 @@
    <script src="controls.js"></script>
    <script src="midas.js"></script>
    <script src="mhttpd.js"></script>
+   <script src="mplot.js"></script>
+   <script src="mhistory.js"></script>
    <title>CAEN HV</title>
 
    <style>
@@ -85,22 +87,53 @@
                // is called 'ClrAlarm' or 'Clr Alarm' on different modules.)
                
                let v0set_units = "V";
+               let v0set_name = "v0set"
                let vmon_units = "V";
+               let i0set_name = "i0set"
                let i0set_units = "uA";
                let imon_units = "uA";
+               let imon_name = "imon";
+               let status_name = "status string"
                let clear_alarm_path = undefined;
 
                for (let k in sett) {
                  if (k.indexOf("/") != -1) {continue;}
-                 if (k.startsWith("v0set")) {v0set_units = sett[k + "/name"].split("(")[1].replace(")", "");}
-                 if (k.startsWith("i0set")) {i0set_units = sett[k + "/name"].split("(")[1].replace(")", "");}
+                 if (k.startsWith("v0set")) {
+                   v0set_units = sett[k + "/name"].split("(")[1].replace(")", "");
+                   v0set_name = sett[k + "/name"];
+                 }
+                 if (k.startsWith("vset")) {
+                   v0set_units = sett[k + "/name"].split("(")[1].replace(")", "");
+                   v0set_name = sett[k + "/name"];
+                 }
+                 if (k.startsWith("i0set")) {
+                   i0set_units = sett[k + "/name"].split("(")[1].replace(")", "");
+                   i0set_name = sett[k + "/name"];
+                 }
+                 if (k.startsWith("iset")) {
+                   i0set_units = sett[k + "/name"].split("(")[1].replace(")", "");
+                   i0set_name = sett[k + "/name"];
+                 }
                  if (k == "clralarm" || k == "clr alarm") {clear_alarm_path = sett_path + "/" + sett[k + "/name"];}
                }
 
                for (let k in stat) {
                  if (k.indexOf("/") != -1) {continue;}
                  if (k.startsWith("vmon")) {vmon_units = stat[k + "/name"].split("(")[1].replace(")", "");}
-                 if (k.startsWith("imon")) {imon_units = stat[k + "/name"].split("(")[1].replace(")", "");}
+                 if (k.startsWith("imon ")) {
+                   imon_units = stat[k + "/name"].split("(")[1].replace(")", "");
+                   imon_name = stat[k + "/name"];
+                 }
+                 if (k.startsWith("imonh")) {
+                   imon_units = stat[k + "/name"].split("(")[1].replace(")", "");
+                   imon_name = stat[k + "/name"];
+                 }
+                 if (k.startsWith("status string")) {
+                   status_name = stat[k + "/name"];
+                 }
+                 if (k.startsWith("chstatus string")) {
+                   status_name = stat[k + "/name"];
+                 }
                }
 
                html += '<table class="mtable">';
@@ -116,7 +149,7 @@
                }
 
                html += '</td></tr>';
-      			   html += '<tr><th>Ch #</th><th>Channel name</th><th>On/off</th><th>V set (' + v0set_units + ')</th><th>V meas. (' + vmon_units + ')</th><th>I limit (' + i0set_units + ')</th><th>I meas. (' + imon_units + ')</th><th>State</th></tr>';
+      			   html += '<tr><th>Ch #</th><th>Channel name</th><th>On/off</th><th>V set (' + v0set_units + ')</th><th>V meas. (' + vmon_units + ')</th><th>I limit (' + i0set_name + '</th><th>I meas. (' + imon_units + ')</th><th>State</th></tr>';
       			   html += '</thead>'
       			   html += '<tbody>';
       			   
@@ -125,11 +158,11 @@
                  html += '<td>' + c + '</td>';
                  html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/ChName[' + c + ']" data-odb-editable="1"></span></td>';
                  html += '<td><input type="checkbox" class="modbcheckbox" data-odb-path="' + sett_path + '/Pw[' + c + ']" data-odb-editable="1"></td>';
-                 html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/VSet (' + v0set_units + ')[' + c + ']" data-odb-editable="1" data-format="f2"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/' + v0set_name + '[' + c + ']" data-odb-editable="1" data-format="f2"></span></td>';
                  html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/VMon (' + vmon_units + ')[' + c + ']" data-format="f2"></span></td>';
-                 html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/ISet (' + i0set_units + ')[' + c + ']" data-odb-editable="1" data-format="f2"></span></td>';
-                 html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/IMonH (' + imon_units + ')[' + c + ']" data-format="f2"></span></td>';
-                 html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/ChStatus String[' + c + ']"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + sett_path + '/' + i0set_name + '[' + c + ']" data-odb-editable="1" data-format="f2"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/' + imon_name + '[' + c + ']" data-format="f2"></span></td>';
+                 html += '<td><span class="modbvalue" data-odb-path="' + stat_path + '/' + status_name + '[' + c + ']"></span></td>';
       				   html += '</tr>';
       			   }
       			   
@@ -140,7 +173,7 @@
       		   html = "CAEN HV frontend hasn't been run yet.";
       	   }
       	   document.getElementById("slots").innerHTML = html;
-           mhttpd_init('CAEN HV');
+           //mhttpd_init('CAEN HV');
          }).catch(function(error) {
            mjsonrpc_error_alert(error);
          });
@@ -148,7 +181,7 @@
    </script>
 </head>
 
-<body class="mcss" onload="init();">
+<body class="mcss" onload="mhttpd_init('CAEN HV');init();">
 
 <!-- header and side navigation will be filled in mhttpd_init -->
 <div id="mheader"></div>
