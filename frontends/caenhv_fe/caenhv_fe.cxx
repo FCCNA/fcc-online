@@ -89,7 +89,11 @@ INT frontend_init() {
 
    // Only log voltage and current in buffers.
    hv.set_log_param("VMon", "VM");
-   hv.set_log_param("IMonH", "IM");
+   if(SYSTEM_TYPE == N1470){
+      hv.set_log_param("IMonH", "IM");
+   } else {
+      hv.set_log_param("IMon", "IM");
+   }
 
    // Don't expose V1/I1 in ODB at all
    //hv.set_ignore_param("V1Set");
