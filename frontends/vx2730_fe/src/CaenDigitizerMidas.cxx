@@ -12,6 +12,7 @@ CaenDigitizerMidas::CaenDigitizerMidas(int index, EQUIPMENT* eq): fFrontendIndex
 }
 
 void CaenDigitizerMidas::parameterToOdb(midas::odb& odb, CaenParameter& param){
+  odb.set_trigger_hotlink(false);
   switch(param.GetDataType()){
   case CaenParameter::DataType::Boolean:
     {
@@ -46,6 +47,7 @@ void CaenDigitizerMidas::parameterToOdb(midas::odb& odb, CaenParameter& param){
   default:
     break;
   }
+  odb.set_trigger_hotlink(true);
 }
 
 void CaenDigitizerMidas::odbToParameter(CaenParameter& param, midas::odb& odb){
@@ -286,7 +288,7 @@ void CaenDigitizerMidas::Sync(bool all) {
 
   if(all){
     //sync all keys
-    fOdbDigitizerSettings.set_trigger_hotlink(false);
+    //fOdbDigitizerSettings.set_trigger_hotlink(false);
     for(auto& par: rootParameter["/par"].GetChilds()){
       if(par.GetName()=="freqsenscore") continue; //Problematic parameter
       if(par.GetName()=="dutycyclesensdcdc") continue; //Problematic parameter
@@ -297,18 +299,18 @@ void CaenDigitizerMidas::Sync(bool all) {
         parameterToOdb(fOdbDigitizerStatus, par);
       }
     }
-    fOdbDigitizerSettings.set_trigger_hotlink(true);
+    //fOdbDigitizerSettings.set_trigger_hotlink(true);
 
     for(int i=0; i<fOdbChannelSettings.size() && i<chVector.size(); i++){
-      fOdbChannelSettings[i].set_trigger_hotlink(false);
+      //fOdbChannelSettings[i].set_trigger_hotlink(false);
       for(auto& par: chVector[i]["/par"].GetChilds()){
         parameterToOdb(fOdbChannelSettings[i], par);
       }
-      fOdbChannelSettings[i].set_trigger_hotlink(true);
+      //fOdbChannelSettings[i].set_trigger_hotlink(true);
     }
   } else {
     //sync only relevant keys
-    fOdbDigitizerSettings.set_trigger_hotlink(false);
+    //fOdbDigitizerSettings.set_trigger_hotlink(false);
     for(const auto& parName: parametersToSync){
       auto par = rootParameter[parName];
 
@@ -318,15 +320,15 @@ void CaenDigitizerMidas::Sync(bool all) {
         parameterToOdb(fOdbDigitizerStatus, par);
       }
     }
-    fOdbDigitizerSettings.set_trigger_hotlink(true);
+    //fOdbDigitizerSettings.set_trigger_hotlink(true);
 
     for(int i=0; i<fOdbChannelSettings.size() && i<chVector.size(); i++){
-      fOdbChannelSettings[i].set_trigger_hotlink(false);
+      //fOdbChannelSettings[i].set_trigger_hotlink(false);
       for(const auto& parName: channelParametersToSync){
         auto par = chVector[i][parName];
         parameterToOdb(fOdbChannelSettings[i], par);
       }
-      fOdbChannelSettings[i].set_trigger_hotlink(true);
+      //fOdbChannelSettings[i].set_trigger_hotlink(true);
     }
   }
 }
