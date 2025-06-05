@@ -12,6 +12,13 @@ CaenDigitizerMidas::CaenDigitizerMidas(int index, EQUIPMENT* eq): fFrontendIndex
 }
 
 void CaenDigitizerMidas::parameterToOdb(midas::odb& odb, CaenParameter& param){
+  if(param.GetName()=="itlamask" || param.GetName()=="itlbmask"){
+    odb.set_trigger_hotlink(false);
+    auto value = (uint64_t)param;
+    odb[param.GetName()] = value;
+    odb.set_trigger_hotlink(true);
+  }
+
   odb.set_trigger_hotlink(false);
   switch(param.GetDataType()){
   case CaenParameter::DataType::Boolean:
