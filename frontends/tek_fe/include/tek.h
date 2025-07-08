@@ -5,6 +5,23 @@
 
 #define TEK_NCHANNEL 6
 
+#ifdef VERBOSE_LOGGING
+#include <ctime>
+inline std::string current_time() {
+  std::time_t t = std::time(nullptr);
+  std::tm tm_buf;
+  char buf[26];
+  localtime_r(&t, &tm_buf);
+  asctime_r(&tm_buf, buf);
+  buf[24]=' '; // remove newline
+  return buf;
+}
+
+#define LOG std::cout << current_time()
+#else
+#define LOG if (false) std::cout
+#endif
+
 class tek {
 protected:
    int sockfd;

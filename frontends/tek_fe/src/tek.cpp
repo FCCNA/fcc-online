@@ -289,6 +289,8 @@ bool tek::ConsumeChannel(int npt, int id){
 }
 
 bool tek::ReadData(){
+   LOG << "reading data" << std::endl;
+
    char buff[80];
    int iChannelBlk=0;
    bool gotFooter=false;
@@ -329,7 +331,7 @@ bool tek::ReadData(){
       while(n>0 && buff[0] != '#'){
          n = ReadFromSocket(buff, 1);
       }
-      //std::cout << "Header found" << std::endl;
+      // LOG << "Header found" << std::endl;
 
       n = ReadFromSocket(buff, 1);
       if(buff[0] < '0' || buff[0] > '9') {
@@ -339,22 +341,21 @@ bool tek::ReadData(){
       n = ReadFromSocket(buff, buff[0]-'0');
 
       int npt = CharArrayToInt(buff, n);
-      //printf("got event with %d bytes\n", npt);
 
       if (! ConsumeChannel(npt, iChannelBlk)){
          receivingData = false;
          return false;
       }
-      //std::cout << "Read channel " << iChannelBlk << std::endl;
+      // LOG << "Read channel " << iChannelBlk << std::endl;
 
       //read footer
       n = ReadFromSocket(buff, 1);
       if(n == 1 && buff[0]==10){
-         //std::cout << "Got Last Channel "<< iChannelBlk << std::endl;
+         LOG << "Got Last Channel "<< iChannelBlk << " with " << npt << " bytes" << std::endl;
          gotFooter = true;
       } else if (n==1 && buff[0] == ';'){
-         //std::cout << "Got Channel "<< iChannelBlk << std::endl;
-         iChannelBlk ++; 
+         LOG << "Got Channel "<< iChannelBlk << " with " << npt << " bytes" << std::endl;
+         iChannelBlk ++;
       } else {
          printf("bad footer, got %d with val %d\n", n, buff[0]);
          receivingData = false;
@@ -362,7 +363,7 @@ bool tek::ReadData(){
       }
    }
 
-   //std::cout << "Event done" << std::endl;
+   LOG << "Event done" << std::endl;
    fEventNumber++;
 
    //if pull mode, arm trigger

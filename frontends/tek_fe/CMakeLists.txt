@@ -19,6 +19,14 @@ if (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
    set(LIBS ${LIBS} -lutil)
 endif()
 
+
+option(VERBOSE_LOGGING "Enable verbose logging" OFF)
+if (VERBOSE_LOGGING)
+  add_compile_definitions(VERBOSE_LOGGING)
+endif()
+
+
+
 add_compile_definitions(UNIX)
 
 
