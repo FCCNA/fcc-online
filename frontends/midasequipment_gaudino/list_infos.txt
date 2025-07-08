@@ -1,0 +1,788 @@
+-> (digi)
+|->par (fold)
+||->cupver (para): '2024100300', R string
+||->fpga_fwver (para): '1.0.44', R string
+||->fwtype (para): 'Scope', R string
+||->modelcode (para): 'WVX2730XAAAA', R string
+||->pbcode (para): 'WA30AXAAAAAA', R string
+||->modelname (para): 'VX2730', R string
+||->formfactor (para): '1', R string
+||->familycode (para): '2730', R string
+||->serialnum (para): '52619', R string
+||->pcbrev_mb (para): '2', R string
+||->pcbrev_pb (para): '1', R string
+||->license (para): '', R string
+||->licensestatus (para): 'Licensed', R string
+||->licenseremainingtime (para): '1800', R float
+||->numch (para): '32', R float
+||->adc_nbit (para): '14', R float
+||->adc_samplrate (para): '500', R float
+||->inputrange (para): '4', R float
+||->inputtype (para): 'SE', R string
+||->zin (para): '50', R float
+||->clocksource (para): 'Internal', RW string
+||->enclockoutfp (para): 'True', RW bool
+||->startsource (para): 'SWcmd', RW string
+||->acqtriggersource (para): 'TrgIn', RW string
+||->tstampresetsource (para): 'Start', RW string
+||->trgoutmode (para): 'Disabled', RW string
+||->gpiomode (para): 'SIN', RW string
+||->busyinsource (para): 'SIN', RW string
+||->syncoutmode (para): 'Disabled', RW string
+||->vetosource (para): 'Disabled', RW string
+||->vetowidth (para): '0', RW uint
+||->vetopolarity (para): 'ActiveHigh', RW string
+||->rundelay (para): '0', RW uint
+||->entriggeroverlap (para): 'False', RW bool
+||->enautodisarmacq (para): 'False', RW bool
+||->enmultiwindowrun (para): 'False', RW bool
+||->pausetimestamp (para): 'Hold', RW string
+||->triggeridmode (para): 'TriggerCnt', RW string
+||->acquisitionstatus (para): '40', R string
+||->recordlengths (para): '40', RW uint
+||->recordlengtht (para): '80', RW uint
+||->maxrawdatasize (para): '1049104', R float
+||->pretriggers (para): '32', RW uint
+||->pretriggert (para): '64', RW uint
+||->triggerdelays (para): '0', RW uint
+||->triggerdelayt (para): '0', RW uint
+||->testpulseperiod (para): '0', RW uint
+||->testpulsewidth (para): '0', RW uint
+||->testpulselowlevel (para): '0', RW uint
+||->testpulsehighlevel (para): '0', RW uint
+||->realtimemonitor (para): '0', R float
+||->deadtimemonitor (para): '0', R float
+||->livetimemonitor (para): '0', R float
+||->triggercnt (para): '0', R float
+||->losttriggercnt (para): '0', R float
+||->volatileclockoutdelay (para): '-2592.5925925925926', RW float
+||->permanentclockoutdelay (para): '-2592.5925925925926', RW float
+||->iolevel (para): 'NIM', RW string
+||->tempsensairin (para): '27.8', R float
+||->tempsensairout (para): '38.7', R float
+||->tempsenscore (para): '64.7', R float
+||->tempsensfirstadc (para): '36.2', R float
+||->tempsenslastadc (para): '50.9', R float
+||->tempsenshottestadc (para): '51.2', R float
+||->tempsensadc0 (para): '36.2', R float
+||->tempsensadc1 (para): '39.8', R float
+||->tempsensadc2 (para): '43.1', R float
+||->tempsensadc3 (para): '45.2', R float
+||->tempsensadc4 (para): '48.2', R float
+||->tempsensadc5 (para): '50.1', R float
+||->tempsensadc6 (para): '51.2', R float
+||->tempsensadc7 (para): '50.9', R float
+||->tempsensdcdc (para): '36.0', R float
+||->vinsensdcdc (para): '5.100', R float
+||->voutsensdcdc (para): '0.723', R float
+||->ioutsensdcdc (para): '4.812', R float
+||->freqsenscore (para): 'ERROR', R float
+||->dutycyclesensdcdc (para): 'ERROR', R float
+||->speedsensfan1 (para): '0', R float
+||->speedsensfan2 (para): '0', R float
+||->errorflagmask (para): '0', RW string
+||->errorflagdatamask (para): '0', RW string
+||->errorflags (para): '0', R string
+||->boardready (para): 'True', R bool
+||->itlamainlogic (para): 'OR', RW string
+||->itlbmainlogic (para): 'OR', RW string
+||->itlamajoritylev (para): '2', RW uint
+||->itlbmajoritylev (para): '2', RW uint
+||->itlapairlogic (para): 'NONE', RW string
+||->itlbpairlogic (para): 'NONE', RW string
+||->itlapolarity (para): 'Direct', RW string
+||->itlbpolarity (para): 'Direct', RW string
+||->itlamask (para): '0', RW string
+||->itlbmask (para): '0', RW string
+||->itlagatewidth (para): '0', RW uint
+||->itlbgatewidth (para): '0', RW uint
+||->itlaenretrigger (para): 'True', RW bool
+||->itlbenretrigger (para): 'True', RW bool
+||->lvdsioreg (para): '65535', RW string
+||->lvdstrgmask (para): 'ERROR', RW string
+||->dacoutmode (para): 'Static', RW string
+||->dacoutstaticlevel (para): '8192', RW uint
+||->dacoutchselect (para): '0', RW uint
+||->sfplinkpresence (para): 'True', R bool
+||->sfplinkactive (para): 'True', R bool
+||->sfplinkprotocol (para): 'Eth1G', R string
+||->enoffsetcalibration (para): 'True', RW bool
+||->ipaddress (para): '192.168.50.22', R string
+||->netmask (para): '255.255.255.0', R string
+||->gateway (para): '192.168.50.1', R string
+||->enchsuppr (para): 'False', RW bool
+|->ch (fold)
+||->0 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '0', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.997140', R float
+||||->adctovolts (para): '0.000244856', R float
+||||->
+
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->1 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '16777216', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.998352', R float
+||||->adctovolts (para): '0.000244559', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->2 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '33554432', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.995409', R float
+||||->adctovolts (para): '0.000245281', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->3 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '50331648', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.998179', R float
+||||->adctovolts (para): '0.000244601', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->4 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '67108864', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.990217', R float
+||||->adctovolts (para): '0.000246568', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->5 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '83886080', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.992208', R float
+||||->adctovolts (para): '0.000246073', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->6 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '100663296', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.993938', R float
+||||->adctovolts (para): '0.000245645', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->7 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '117440512', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.991083', R float
+||||->adctovolts (para): '0.000246352', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->8 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '134217728', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.998698', R float
+||||->adctovolts (para): '0.000244474', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->9 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '150994944', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.995669', R float
+||||->adctovolts (para): '0.000245218', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->10 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '167772160', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.995323', R float
+||||->adctovolts (para): '0.000245303', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->11 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '184549376', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.995409', R float
+||||->adctovolts (para): '0.000245281', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->12 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '201326592', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.002159', R float
+||||->adctovolts (para): '0.000243630', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->13 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '218103808', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.996794', R float
+||||->adctovolts (para): '0.000244941', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->14 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '234881024', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.002851', R float
+||||->adctovolts (para): '0.000243461', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->15 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '251658240', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.002938', R float
+||||->adctovolts (para): '0.000243440', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->16 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '268435456', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.002851', R float
+||||->adctovolts (para): '0.000243461', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->17 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '285212672', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.996967', R float
+||||->adctovolts (para): '0.000244898', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->18 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '301989888', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.004842', R float
+||||->adctovolts (para): '0.000242979', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->19 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '318767104', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.003976', R float
+||||->adctovolts (para): '0.000243189', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->20 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '335544320', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.001813', R float
+||||->adctovolts (para): '0.000243714', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->21 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '352321536', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.008649', R float
+||||->adctovolts (para): '0.000242062', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->22 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '369098752', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.002851', R float
+||||->adctovolts (para): '0.000243461', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->23 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '385875968', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.994458', R float
+||||->adctovolts (para): '0.000245516', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->24 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '402653184', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.008736', R float
+||||->adctovolts (para): '0.000242041', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->25 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '419430400', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.009168', R float
+||||->adctovolts (para): '0.000241937', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->26 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '436207616', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.007524', R float
+||||->adctovolts (para): '0.000242332', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->27 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '452984832', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.007438', R float
+||||->adctovolts (para): '0.000242353', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->28 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '469762048', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.996621', R float
+||||->adctovolts (para): '0.000244983', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->29 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '486539264', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.997486', R float
+||||->adctovolts (para): '0.000244771', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->30 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '503316480', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '1.000255', R float
+||||->adctovolts (para): '0.000244093', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+||->31 (chn )
+|||->par (fold)
+||||->itlconnect (para): 'Disabled', RW string
+||||->wavedatasource (para): 'ADC_DATA', RW string
+||||->chenable (para): 'True', RW bool
+||||->selftrgrate (para): '0', R string
+||||->chstatus (para): '520093696', R string
+||||->dcoffset (para): '50.003', RW float
+||||->signaloffset (para): '0', RW int
+||||->gainfactor (para): '0.995929', R float
+||||->adctovolts (para): '0.000245154', R float
+||||->chgain (para): '0', RW uint
+||||->triggerthr (para): '0', RW int
+||||->triggerthrmode (para): 'Relative', RW string
+||||->selftriggeredge (para): 'RISE', RW string
+||||->selftriggerwidth (para): '8', RW string
+||||->samplesoverthreshold (para): '1', RW uint
+||||->overthresholdvetowidth (para): '0', RW uint
+||||->chsupprthr (para): '0', RW int
+||||->chsupprsamplesoverthreshold (para): '1', RW uint
+|->lvds (fold)
+||->0 (lvds)
+|||->par (fold)
+||||->lvdsmode (para): 'IORegister', RW string
+||||->lvdsdirection (para): 'Input', RW string
+||->1 (lvds)
+|||->par (fold)
+||||->lvdsmode (para): 'IORegister', RW string
+||||->lvdsdirection (para): 'Input', RW string
+||->2 (lvds)
+|||->par (fold)
+||||->lvdsmode (para): 'IORegister', RW string
+||||->lvdsdirection (para): 'Input', RW string
+||->3 (lvds)
+|||->par (fold)
+||||->lvdsmode (para): 'IORegister', RW string
+||||->lvdsdirection (para): 'Input', RW string
+|->cmd (fold)
+||->reset (cmd )
+||->reboot (cmd )
+||->cleardata (cmd )
+||->armacquisition (cmd )
+||->disarmacquisition (cmd )
+||->swstartacquisition (cmd )
+||->swstopacquisition (cmd )
+||->sendswtrigger (cmd )
+||->reloadcalibration (cmd )
+|->endpoint (fold)
+||->raw (endp)
+|||->par (fold)
+||->scope (endp)
+||->par (fold)
+|||->activeendpoint (para): 'Raw', RW string
