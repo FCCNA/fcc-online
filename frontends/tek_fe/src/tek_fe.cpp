@@ -127,7 +127,7 @@ class tek_midas: public tek {
    };
 
    bool ConsumeChannel(int npt, int id){
-      //std::cout << "Consuming channel " << id <<std::endl;
+      // LOG << "Consuming channel " << id <<std::endl;
       char* padc;
 
       /* create ADC0 bank */

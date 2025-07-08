@@ -43,7 +43,7 @@ public:
 	 }
       }
       channels += '\n';
-      //std::cout << "Enabled Channels: " << channels;
+      LOG << "Enabled Channels: " << channels;
       WriteCmd("DAT:SOU " + channels + "\n");
       
       if(IsPushMode()){
@@ -65,7 +65,7 @@ public:
    }
 
    bool ConsumeChannel(int npt, int id){
-      //std::cout << "Consuming channel " << id << ", " << npt << " points" << std::endl;
+      LOG << "Consuming channel " << id << ", " << npt << " points" << std::endl;
       unsigned short buff[10000];
       if (npt > 10000*sizeof(unsigned short)){
          std::cout << "Channel cannot fit in buffer!" << std::endl;
