@@ -51,6 +51,14 @@ protected:
    virtual void BeginOfRun(){};
    virtual void EndOfRun(){};
 
+   class ReceivingDataGuard {
+   public:
+       explicit ReceivingDataGuard(tek *instrument);
+       ~ReceivingDataGuard();
+   protected:
+       tek* fInstrument = nullptr;
+   };
+
 public:
 
    tek(bool pushMode = false);
