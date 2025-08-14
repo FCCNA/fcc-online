@@ -11,7 +11,7 @@ class CaenData;
 //base class
 class CaenEndpoint {
    public:
-      CaenEndpoint(const std::string& n, const std::string& f): name(n), format(f) {};
+      CaenEndpoint(const std::string& n, const std::string& f): name(n), format(f), status(ReadoutStatus::Unknown) {};
       virtual ~CaenEndpoint() noexcept {};
 
       //timeout setters
@@ -32,7 +32,7 @@ class CaenEndpoint {
       friend class CaenDigitizer;
 
    protected:
-      std::atomic<ReadoutStatus> status = ReadoutStatus::Unknown;
+      std::atomic<ReadoutStatus> status;
       const std::string name;
       const std::string format;
       int timeout = 500; //timeout in ms

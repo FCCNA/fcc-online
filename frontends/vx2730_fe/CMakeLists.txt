@@ -44,6 +44,7 @@ set(INCDIRS
 )
 
 add_library(digitizer STATIC ${LIBDIGITIZER_SRC})
+set_property(TARGET digitizer PROPERTY CXX_STANDARD 20)
 target_include_directories(digitizer PUBLIC ${INCDIRS})
 target_link_libraries(digitizer CAEN_FELib)
 
