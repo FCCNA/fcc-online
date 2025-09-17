@@ -103,20 +103,19 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
             raise RuntimeError("Fail to get measurement")
 
     def led_callback(self, client, path, odb_value):
-        """Callback when the LED value changes in ODB"""
-        if self.state != ArduinoState.Idle:
-            self.client.msg("Tried to change LED while moving", is_error=True)
-            return
+    """Callback when the LED value changes in ODB"""
+    if self.state != ArduinoState.Idle:
+        self.client.msg("Tried to change LED while moving", is_error=True)
+        return
 
-        try:
-            if int(odb_value) == 1:
-                self.ser.write(b'led_on\n')
-            else:
-                self.ser.write(b'led_off\n')
-        except Exception as e:
-            self.client.msg(f"Error sending LED command: {e}", is_error=True)
-            raise RuntimeError("Fail to send LED command")
-
+    try:
+        if int(odb_value) == 1:
+            self.ser.write(b'led1\n')   
+        else:
+            self.ser.write(b'led0\n')   
+    except Exception as e:
+        self.client.msg(f"Error sending LED command: {e}", is_error=True)
+        raise RuntimeError("Fail to send LED command")
 
     def connect(self):
         #connect to serial port
