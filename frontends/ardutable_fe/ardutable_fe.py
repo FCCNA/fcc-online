@@ -75,6 +75,10 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
         self.client.odb_set(f'{self.odb_variables_dir}/Position', float(0))
         self.client.odb_watch(f'{self.odb_variables_dir}/Demand', self.demand_callback)
 
+        # Write LED variable to ODB
+        self.client.odb_set(f'{self.odb_variables_dir}/Led', int(0))  # 0=off, 1=on
+        self.client.odb_watch(f'{self.odb_variables_dir}/Led', self.led_callback)
+
         self.state = ArduinoState.Idle
 
         # setup parser
@@ -97,6 +101,21 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
         except Exception as e:
             self.client.msg("Error moving: %s" % str(e), is_error=True);
             raise RuntimeError("Fail to get measurement")
+
+    def led_callback(self, client, path, odb_value):
+        """Callback when the LED value changes in ODB"""
+        if self.state != ArduinoState.Idle:
+            self.client.msg("Tried to change LED while moving", is_error=True)
+            return
+
+        try:
+            if int(odb_value) == 1:
+                self.ser.write(b'led_on\n')
+            else:
+                self.ser.write(b'led_off\n')
+        except Exception as e:
+            self.client.msg(f"Error sending LED command: {e}", is_error=True)
+            raise RuntimeError("Fail to send LED command")
 
 
     def connect(self):
