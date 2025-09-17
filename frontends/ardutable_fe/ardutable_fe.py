@@ -124,15 +124,6 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
             self.client.msg(f"Error sending LED command: {e}", is_error=True)
             raise RuntimeError("Fail to send LED command")
 
-    try:
-        if int(odb_value) == 1:
-            self.ser.write(b'led1\n')   
-        else:
-            self.ser.write(b'led0\n')   
-    except Exception as e:
-        self.client.msg(f"Error sending LED command: {e}", is_error=True)
-        raise RuntimeError("Fail to send LED command")
-
     def connect(self):
         #connect to serial port
         try:
