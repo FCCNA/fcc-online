@@ -55,11 +55,12 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
         default_settings = {
             "Serial Port": "/dev/ttyUSB0",
             "Serial Speed": 9600,
-            "Editable": "Demand",
+            "Editable": "Demand,Led",
             "Names": "Arduino stage",
             "Unit Demand": "deg",
             "Unit State": "",
             "Unit Position": "deg",
+            "Unit Led": "",
             "Format Demand": "%f0",
             "Format State": "%f0",
             "Format Position": "%f3",
@@ -76,7 +77,7 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
         self.client.odb_watch(f'{self.odb_variables_dir}/Demand', self.demand_callback)
 
         # Write LED variable to ODB
-        self.client.odb_set(f'{self.odb_variables_dir}/Led', int(0))  # 0=off, 1=on
+        self.client.odb_set(f'{self.odb_variables_dir}/Led', False)
         self.client.odb_watch(f'{self.odb_variables_dir}/Led', self.led_callback)
 
         self.state = ArduinoState.Idle
@@ -109,10 +110,16 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
             return
 
         try:
-            if int(odb_value) == 1:
-                self.ser.write(b'led_on\n')
+            if odb_value:
+                self.ser.write(b'led1\n')
+                result = self.ser.readline().decode();
+                while not result.startswith("LED "):
+                    result = self.ser.readline().decode();
             else:
-                self.ser.write(b'led_off\n')
+                self.ser.write(b'led0\n')
+                result = self.ser.readline().decode();
+                while not result.startswith("LED "):
+                    result = self.ser.readline().decode();
         except Exception as e:
             self.client.msg(f"Error sending LED command: {e}", is_error=True)
             raise RuntimeError("Fail to send LED command")
