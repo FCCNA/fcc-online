@@ -1,48 +1,27 @@
 // Code maintained and documented by Lucrezia Borriello for FCC test beam (2025)
 
 /*
-STEPPER MOTOR – AVAILABLE COMMANDS
+STEPPER MOTOR + LED – AVAILABLE COMMANDS
 ---------------------------------
-Recommended operating voltage: 6.4 V
-Max supply current: 3.20 A
+Stepper commands:
+  aXX     → Rotate clockwise by XX degrees.
+  iXX     → Rotate counterclockwise by XX degrees.
+  s       → Reset position to 0°.
+  return  → Move back to 0° reference.
+  pos     → Print current position in degrees.
+  setXX   → Force current position to XX degrees.
 
-Commands (send via Serial Monitor):
-
-1. aXX
-   → Rotate clockwise by XX degrees.
-   Example: "a10" → rotates +10°.
-
-2. iXX
-   → Rotate counterclockwise by XX degrees.
-   Example: "i15" → rotates -15°.
-
-3. s
-   → Reset position to 0° (set current angle as reference).
-   Example: "s"
-
-4. return
-   → Move back to the 0° reference position.
-   Example: "return"
-
-5. pos
-   → Print the current position in degrees.
-   Example: "pos"
-
-6. setXX
-   → Force current position to XX degrees (manual alignment).
-   Example: "set90" → sets current angle = 90°.
-
+LED commands:
+  led1    → Turn ON LED on pin D8
+  led0    → Turn OFF LED on pin D8
 ---------------------------------
-📄 Full setup and usage guide:
-https://docs.google.com/document/d/1yLf09a52iqJWmRaEvBR44DiIFsmvp0T2C7AQl0-1fHc/edit?usp=sharing
 */
-
-
 
 int Pin0 = 10; 
 int Pin1 = 12; 
 int Pin2 = 11; 
 int Pin3 = 13; 
+const int ledPin = 8;  // LED pin
 
 int _step = 0; 
 boolean dir = false; // true = orario, false = antiorario
@@ -61,8 +40,10 @@ void setup() {
   pinMode(Pin1, OUTPUT);  
   pinMode(Pin2, OUTPUT);  
   pinMode(Pin3, OUTPUT);  
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW); // LED spento all’inizio
 
-  Serial.println("Ready: aXX, iXX, s, return, pos, setXX");
+  Serial.println("Ready: aXX, iXX, s, return, pos, setXX, led1, led0");
 }
 
 void moveSteps(long steps, boolean direction) {
@@ -146,6 +127,14 @@ void loop() {
       Serial.print(newPos); 
       Serial.println("°");
       printPosition();
+    }
+    else if(cmd=="led1"){ 
+      digitalWrite(ledPin, HIGH);
+      Serial.println("LED acceso");
+    }
+    else if(cmd=="led0"){ 
+      digitalWrite(ledPin, LOW);
+      Serial.println("LED spento");
     }
     else{
       Serial.println("Command not valid");
