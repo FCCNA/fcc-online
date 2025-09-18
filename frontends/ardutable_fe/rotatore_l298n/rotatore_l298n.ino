@@ -2,6 +2,8 @@
 
 /*
 STEPPER MOTOR + LED – AVAILABLE COMMANDS
+Recommended operating voltage: 6.4 V
+Max supply current: 3.20 A
 ---------------------------------
 Stepper commands:
   aXX     → Rotate clockwise by XX degrees.
@@ -15,6 +17,8 @@ LED commands:
   led1    → Turn ON LED on pin D8
   led0    → Turn OFF LED on pin D8
 ---------------------------------
+Full setup and usage guide:
+https://docs.google.com/document/d/1yLf09a52iqJWmRaEvBR44DiIFsmvp0T2C7AQl0-1fHc/edit?usp=sharing
 */
 
 int Pin0 = 10; 
