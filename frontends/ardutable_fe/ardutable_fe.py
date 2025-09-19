@@ -55,7 +55,7 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
         default_settings = {
             "Serial Port": "/dev/ttyUSB0",
             "Serial Speed": 9600,
-            "Editable": "Demand,Led",
+            "Editable": "Demand,Position,Led",
             "Names": "Arduino stage",
             "Unit Demand": "deg",
             "Unit State": "",
@@ -75,6 +75,7 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
         self.client.odb_set(f'{self.odb_variables_dir}/State', int(0))
         self.client.odb_set(f'{self.odb_variables_dir}/Position', float(0))
         self.client.odb_watch(f'{self.odb_variables_dir}/Demand', self.demand_callback)
+        self.client.odb_watch(f'{self.odb_variables_dir}/Position', self.position_callback)
 
         # Write LED variable to ODB
         self.client.odb_set(f'{self.odb_variables_dir}/Led', False)
@@ -102,6 +103,25 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
         except Exception as e:
             self.client.msg("Error moving: %s" % str(e), is_error=True);
             raise RuntimeError("Fail to get measurement")
+
+    def position_callback(self, client, path, odb_value):
+        """Callback when the Position value changes in ODB, to be used to set the zero"""
+        if self.state != ArduinoState.Idle:
+            self.client.msg("Tried to change Position while moving", is_error=True)
+            return
+
+        demand = self.client.odb_get(f'{self.odb_variables_dir}/Demand')
+
+        try:
+            self.client.msg("Arduino table position set from \'%d\' to \'%d\'" % (demand, odb_value));
+            self.ser.write(f'set{int(odb_value):03d}\n'.encode('UTF-8'));
+            result = self.ser.readline().decode();
+            while not result.startswith("Position manually set to "):
+                result = self.ser.readline().decode();
+            self.ser.readline() # also read position
+        except Exception as e:
+            self.client.msg(f"Error sending Set Position command: {e}", is_error=True)
+            raise RuntimeError("Fail to send Set Position command")
 
     def led_callback(self, client, path, odb_value):
         """Callback when the LED value changes in ODB"""
@@ -156,7 +176,9 @@ class ArdutableEquipment(midas.frontend.EquipmentBase):
                 self.client.msg("Error parsing string \'%s\'" % result.rstrip(), is_error=True);
                 raise ValueError("cannot parse string");
             
+            self.client.odb_stop_watching(f'{self.odb_variables_dir}/Position')
             self.client.odb_set(f'{self.odb_variables_dir}/Position', round(values["pos"], 3))
+            self.client.odb_watch(f'{self.odb_variables_dir}/Position', self.position_callback)
         elif self.state == ArduinoState.Moving:
             # check movement is complete
             try :
