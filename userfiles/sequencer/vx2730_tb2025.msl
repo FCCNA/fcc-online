@@ -1,0 +1,108 @@
+COMMENT vx2730 daq with self trigger
+
+# Beam PMT trigger
+trigger_channel = 0
+trigger_threshold_mV = -200
+
+# Large plastic trigger
+#trigger_channel = 10
+#trigger_threshold_mV = -60
+
+
+# configure
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   ODBSET "Digitizer/acqtriggersource", "ITLA"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 2000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 500
+
+   #enable channel in trigger source A
+   SET mask, 2 ^ $trigger_channel
+   ODBSET "Digitizer/itlamask", $mask
+ENDODBSUBDIR
+
+CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $trigger_channel
+
+ODBSUBDIR $channel_string
+   #configure channel itl
+   ODBSET "itlconnect", "ITLA"
+
+   #configure trigger threshold
+   ODBGET "adctovolts", factor
+   ODBSET "triggerthr", $trigger_threshold_mV / ( $factor * 1000)
+   
+ENDODBSUBDIR
+
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel*/chenable", n
+
+LOOP enabled_channel, 0, 4, 5, 6, 7, 8, 9, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $enabled_channel
+
+   ODBSUBDIR $channel_string
+      #enable the channel
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP central_channel, 0, 1, 2, 3
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $central_channel
+
+   ODBSUBDIR $channel_string
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP neg_channel, 4, 5, 6, 7, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $neg_channel
+
+   ODBSUBDIR $channel_string
+      #offset for negative signals
+      ODBSET "dcoffset", 80
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP pos_channel, 8, 9
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $pos_channel
+
+   ODBSUBDIR $channel_string
+      #offset for positive signals
+      ODBSET "dcoffset", 20
+
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "RISE"
+   ENDODBSUBDIR
+ENDLOOP
+
+
+#gain 2.5 = 8dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel8/chgain", 8
+#gain 2.5 = 8dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel9/chgain", 12
+
+LOOP infinite
+   TRANSITION start
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 30000
+   TRANSITION stop
+
+ENDLOOP
+
+
+SUBROUTINE atexit
+      ODBGET /Runinfo/State, state
+      IF $state == 3
+         TRANSITION stop
+      ENDIF
+ENDSUBROUTINE
