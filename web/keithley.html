@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="midas.css">
+   <script src="controls.js"></script>
+   <script src="midas.js"></script>
+   <script src="mhttpd.js"></script>
+   <script src="mplot.js"></script>
+   <style>
+       .select {
+           padding: 6px;
+           background-color: #E0E0E0;
+       }
+
+       .eheader {
+           width: 100%;
+           font-family: verdana, tahoma, sans-serif;
+       }
+
+       table.eheader {
+           border-collapse: collapse;
+       }
+
+       table.eheader td {
+           border: 1px solid white;
+           padding: 4px;
+       }
+
+       table.data {
+           border: none;
+           border-collapse: collapse;
+       }
+
+       table.data td {
+           border: 1px solid white;
+       }
+
+       table.data th {
+           font-family: verdana, tahoma, sans-serif;
+           background-color: #8BBDFF;
+           color: white;
+           border: 1px solid white;
+           padding: 4px;
+       }
+
+       table.data td {
+           font-family: Courier, monospace;
+           padding: 4px;
+       }
+   </style>
+
+   <script>
+     var plot;
+     var event = null;
+     // create colormap plot with parameters
+     function all_off() {
+            modbset(["/Equipment/KeithleyEquipment_1/Variables/Output", "/Equipment/KeithleyEquipment_2/Variables/Output", "/Equipment/KeithleyEquipment_3/Variables/Output"], [0, 0, 0])
+          }
+     function all_on() {
+            modbset(["/Equipment/KeithleyEquipment_1/Variables/Output", "/Equipment/KeithleyEquipment_2/Variables/Output", "/Equipment/KeithleyEquipment_3/Variables/Output"], [1, 1, 1])
+          }
+   </script>
+
+   <title>Keithley control</title>
+</head>
+
+<body class="mcss" onload="mhttpd_init('Keithley control');">
+<div id="mheader"></div>
+<div id="msidenav"></div>
+
+<div id="mmain">
+   <table class="mtable" >
+      <tr>
+         <td class="mtableheader">Keithley control</td>
+      </tr>
+      <tr>
+         <td style="white-space: nowrap">
+           <strong>Keithley 1: </strong>
+           <input style="display: inline-block;" type="checkbox" class="modbcheckbox" data-odb-path="/Equipment/KeithleyEquipment_1/Variables/Output"/> &nbsp;&nbsp;
+           <div style="display: inline-block;" class="modbvalue" data-odb-path="/Equipment/KeithleyEquipment_1/Variables/Demand" data-odb-editable="1"></div> Volts
+           <div align="right" class="modbvalue" data-odb-path="/Equipment/KeithleyEquipment_1/Variables/Output" data-format="[grey, red]"></div>
+         </td>
+      </tr>
+      <tr>
+         <td style="white-space: nowrap">
+           <strong>Keithley 2:</strong>
+           <input style="display: inline-block;" type="checkbox" class="modbcheckbox" data-odb-path="/Equipment/KeithleyEquipment_2/Variables/Output"/> &nbsp;&nbsp;
+           <div style="display: inline-block;" class="modbvalue" data-odb-path="/Equipment/KeithleyEquipment_2/Variables/Demand" data-odb-editable="1"></div> Volts
+           <div align="right" class="modbvalue" data-odb-path="/Equipment/KeithleyEquipment_2/Variables/Output" data-format="[grey, red]"></div>
+         </td>
+      </tr>
+      <tr>
+         <td style="white-space: nowrap">
+           <strong>Keithley 3:</strong>
+           <input style="display: inline-block;" type="checkbox" class="modbcheckbox" data-odb-path="/Equipment/KeithleyEquipment_2/Variables/Output"/> &nbsp;&nbsp;
+           <div style="display: inline-block;" class="modbvalue" data-odb-path="/Equipment/KeithleyEquipment_3/Variables/Demand" data-odb-editable="1"></div> Volts
+           <div align="right" class="modbvalue" data-odb-path="/Equipment/KeithleyEquipment_3/Variables/Output" data-format="[grey, red]" ></div>
+         </td>
+      </tr>
+      <tr>
+         <td class="select">
+           Global control: 
+           <button class="mbutton" onclick="all_off()">All Off</button>
+           <button class="mbutton" onclick="all_on()">All On</button>
+         </td>
+      </tr>
+   </table>
+
+
+</div>
+

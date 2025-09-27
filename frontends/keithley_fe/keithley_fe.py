@@ -48,7 +48,8 @@ class KeithleyEquipment(midas.frontend.EquipmentBase):
             "Resource": "",
             "Editable": "Demand,Output", 
             "Names KEIT": ["Voltage", "Current"],
-            "Unit ARD0": ["V", "A"],
+            "Unit KEIT": ["V", "A"],
+            "Format KEIT": ["%f2", "%e2"],
             "Grid display": False
         }
 
