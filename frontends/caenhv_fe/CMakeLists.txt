@@ -1,11 +1,19 @@
 cmake_minimum_required(VERSION 3.0)
-project(camehv_fe)
+project(caenhv_fe)
+
+#default target name
+set(targetname caenhv_fe)
 
 # Typical system types are SY1527 and SY4527.
 # See CAENHV_SYSTEM_TYPE_t in CAENHVWrapper.h for the full list.
 if (NOT DEFINED SYSTEM_TYPE)
   set(SYSTEM_TYPE N1470)
+else()
+  set(targetname "caenhv_fe_${SYSTEM_TYPE}")
+  set(EXPLICIT_SYSTEM_TYPE 1)
 endif()
+
+message("Compiling executable ${targetname} for CAEN system ${SYSTEM_TYPE}")
 
 # Check for MIDASSYS environment variable
 if (NOT DEFINED ENV{MIDASSYS})
@@ -27,21 +35,25 @@ if (NOT DEFINED INSTALL_DIR)
   set(INSTALL_DIR ${CMAKE_SOURCE_DIR}/bin)
 endif()
 
-add_executable(caenhv_fe
+add_executable(${targetname}
   caenhv_fe.cxx
   dsproto_sy4527/caenhv_fe_class.cxx
   dsproto_sy4527/caenhvwrapper_cxx.cxx)
 
-install(TARGETS caenhv_fe DESTINATION ${INSTALL_DIR})
+install(TARGETS ${targetname} DESTINATION ${INSTALL_DIR})
 
-target_compile_options(caenhv_fe PRIVATE -DUNIX -DSYSTEM_TYPE=${SYSTEM_TYPE})
+target_compile_options(${targetname} PRIVATE -DUNIX -DSYSTEM_TYPE=${SYSTEM_TYPE})
+if (${EXPLICIT_SYSTEM_TYPE})
+  target_compile_options(${targetname} PRIVATE -DEXPLICIT_SYSTEM_TYPE)
+endif()
+
 
 # No CAEN dir
-target_include_directories(caenhv_fe PRIVATE
+target_include_directories(${targetname} PRIVATE
   ${MIDASSYS}/include
   dsproto_sy4527/
 )
 
-target_link_libraries(caenhv_fe ${MIDASSYS}/lib/libmfe.a ${MIDASSYS}/lib/libmidas.a ${CAEN_LIB} ${LIBS})
+target_link_libraries(${targetname} ${MIDASSYS}/lib/libmfe.a ${MIDASSYS}/lib/libmidas.a ${CAEN_LIB} ${LIBS})
 
 

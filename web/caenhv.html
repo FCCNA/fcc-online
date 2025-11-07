@@ -55,12 +55,10 @@
         }
        );
      }
-     
-     function init() {
-    	 check_fe_running();
-    	 
+
+     function populateDiv(eqName, divId) {
     	 // Get slot properties and build HTML tables.
-    	 let paths = ["/Equipment/caen_hv/Status", "/Equipment/caen_hv/Settings"];
+    	 let paths = ["/Equipment/" + eqName + "/Status", "/Equipment/" + eqName + "/Settings"];
        mjsonrpc_db_get_values(paths).then(
          function(rpc) {
       	   let html = "";
@@ -138,11 +136,11 @@
 
                html += '<table class="mtable">';
       			   html += '<thead>';
-      			   html += '<tr><th colspan="8" class="mtableheader">CAEN HV - ' + slot_name + '</th></tr>';
+      			   html += '<tr><th colspan="8" class="mtableheader">CAEN HV - ' + eqName + '  - ' + slot_name + '</th></tr>';
       			   html += '<tr><td colspan="8">';
                html += '  Model ' + stat["model"] + ' (' + stat["description"].trim() + ').&nbsp;&nbsp;&nbsp;&nbsp;';
-               html += '  <a href="?cmd=odb&odb_path=/Equipment/caen_hv/Settings/' + slot_name + '">All settings</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-               html += '  <a href="?cmd=odb&odb_path=/Equipment/caen_hv/Status/' + slot_name + '">Full status</a>';
+               html += '  <a href="?cmd=odb&odb_path=/Equipment/' + eqName + '/Settings/' + slot_name + '">All settings</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+               html += '  <a href="?cmd=odb&odb_path=/Equipment/' + eqName + '/Status/' + slot_name + '">Full status</a>';
                
                if (clear_alarm_path !== undefined) {
                  html += '&nbsp;&nbsp;&nbsp;&nbsp;<button class="mbutton" onclick="clear_hv_alarm(\'' + clear_alarm_path + '\')">Clear alarms</button>';
@@ -172,11 +170,35 @@
       	   } else {
       		   html = "CAEN HV frontend hasn't been run yet.";
       	   }
-      	   document.getElementById("slots").innerHTML = html;
+      	   document.getElementById(divId).innerHTML = document.getElementById(divId).innerHTML + html;
            //mhttpd_init('CAEN HV');
          }).catch(function(error) {
            mjsonrpc_error_alert(error);
          });
+
+     }
+
+     
+     function init() {
+    	 check_fe_running();
+    	 var path = "/Equipment/";
+       mjsonrpc_db_get_value(path).then(
+    		 function(rpc) {
+    			 let hv_running = false;
+           if (rpc.result.status[0] == 1) {
+             let equipments = rpc.result.data[0];
+        	   for (let key in equipments) {
+        		   if (key.endsWith("/name")) {
+        			   continue;
+        		   }
+        		   
+        		   if (key.startsWith("caen_") && key.endsWith("_hv")) {
+                 populateDiv(key, "slots")
+        		   }
+        	   }
+           }
+         }
+       )
      }
    </script>
 </head>

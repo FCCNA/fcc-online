@@ -3,6 +3,10 @@
 #include "dsproto_sy4527/caenhv_fe_class.h"
 #include "midas.h"
 
+#define MACRO_TO_STRING(s) INTERNAL_MACRO_TO_STRING(s)
+#define INTERNAL_MACRO_TO_STRING(s) #s
+
+
 /* This frontend controls a CAEN SYXX27 hivh voltage crate (e.g. SY4527).
  * It is built in several layers:
  * - The C CAENHVWrapper provided by CAEN, which is painful to use.
@@ -16,7 +20,11 @@
 /*-- Globals -------------------------------------------------------*/
 
 /* The frontend name (client name) as seen by other MIDAS clients   */
+#ifdef EXPLICIT_SYSTEM_TYPE
+const char *frontend_name = "caenhv_" MACRO_TO_STRING(SYSTEM_TYPE) "_fe";
+#else
 const char *frontend_name = "caenhv_fe";
+#endif
 /* The frontend file name, don't change it */
 const char *frontend_file_name = __FILE__;
 
@@ -60,7 +68,12 @@ INT read_event(char *pevent, INT off);
 #undef USE_INT
 
 EQUIPMENT equipment[] = {
-      { "caen_hv%02d", /* equipment name */
+      { 
+#ifdef EXPLICIT_SYSTEM_TYPE
+        "caen_" MACRO_TO_STRING(SYSTEM_TYPE) "_hv%02d", /* equipment name */
+#else
+        "caen_hv%02d", /* equipment name */
+#endif
          { 400, 0, /* event ID, trigger mask */
          "SYSTEM", /* write events to system buffer */
          EQ_PERIODIC, /* equipment type */
