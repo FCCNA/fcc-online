@@ -288,12 +288,26 @@ bool tek::ConsumeChannel(int npt, int id){
    return true;
 }
 
+tek::ReceivingDataGuard::ReceivingDataGuard(tek* instrument) : fInstrument(instrument) {
+  fInstrument->receivingData = true;
+}
+
+tek::ReceivingDataGuard::~ReceivingDataGuard() {
+  fInstrument->receivingData = false;
+  if (!fInstrument->IsPushMode())
+     // if pull mode, arm trigger
+     fInstrument->WriteCmd("ACQ:STATE RUN\n");
+}
+
 bool tek::ReadData(){
+   LOG << "reading data" << std::endl;
+
    char buff[80];
    int iChannelBlk=0;
    bool gotFooter=false;
 
-   receivingData = true;
+   ReceivingDataGuard receivingDataGuard(this);
+
    //if pull mode, fetch data
    if(!fPushMode){
       /*std::string channels = ReadCmd("DAT:SOU:AVAIL?\n");
@@ -317,7 +331,6 @@ bool tek::ReadData(){
          std::cout << "No data received" << std::endl;
          std::cout << ReadCmd("*ESR?\n");
          std::cout << ReadCmd("ALLEV?\n");
-	 receivingData = false;
          return false;
       }
    }
@@ -329,47 +342,41 @@ bool tek::ReadData(){
       while(n>0 && buff[0] != '#'){
          n = ReadFromSocket(buff, 1);
       }
-      //std::cout << "Header found" << std::endl;
+      // LOG << "Header found" << std::endl;
 
       n = ReadFromSocket(buff, 1);
       if(buff[0] < '0' || buff[0] > '9') {
-         receivingData = false;
+         LOG << "unexpected data, aborting read" << std::endl;
          return false;
       }
       n = ReadFromSocket(buff, buff[0]-'0');
 
       int npt = CharArrayToInt(buff, n);
-      //printf("got event with %d bytes\n", npt);
 
       if (! ConsumeChannel(npt, iChannelBlk)){
-         receivingData = false;
+         LOG << "cannot consume channel " << iChannelBlk << " with " << npt << " bytes, aborting read" << std::endl;
          return false;
       }
-      //std::cout << "Read channel " << iChannelBlk << std::endl;
+      // LOG << "Read channel " << iChannelBlk << std::endl;
 
       //read footer
       n = ReadFromSocket(buff, 1);
       if(n == 1 && buff[0]==10){
-         //std::cout << "Got Last Channel "<< iChannelBlk << std::endl;
+         LOG << "Got Last Channel "<< iChannelBlk << " with " << npt << " bytes" << std::endl;
          gotFooter = true;
       } else if (n==1 && buff[0] == ';'){
-         //std::cout << "Got Channel "<< iChannelBlk << std::endl;
-         iChannelBlk ++; 
+         LOG << "Got Channel "<< iChannelBlk << " with " << npt << " bytes" << std::endl;
+         iChannelBlk ++;
       } else {
          printf("bad footer, got %d with val %d\n", n, buff[0]);
-         receivingData = false;
+         LOG << "n bytes: " << npt << std::endl;
          return false;
       }
    }
 
-   //std::cout << "Event done" << std::endl;
+   LOG << "Event done" << std::endl;
    fEventNumber++;
 
-   //if pull mode, arm trigger
-   if(!fPushMode)
-      WriteCmd("ACQ:STATE RUN\n");
-
-   receivingData = false;
    return true;
 }
 
