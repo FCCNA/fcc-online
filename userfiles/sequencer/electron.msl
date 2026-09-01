@@ -1,0 +1,12 @@
+
+
+
+SET description, "e+ 10GeV run, trigger from MiB (plastic) + UniNa Plastic, CsITl UG11 filter, angle 0 deg. CH1: 3010 - no amp, CH2 3010 - CAEN amp 28; CH3 LYSO; CH4 MCP; CH5 Plastic 1x1x1; CH6 Trigger"
+ODBSET "/Runinfo/Run description", $description
+
+LOOP 1
+   TRANSITION start
+   WAIT events, 20000
+   TRANSITION stop
+
+ENDLOOP

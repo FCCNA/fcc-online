@@ -1,0 +1,26 @@
+ODBSET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[0]", 40
+#da 39+1 V a 39+6 V 
+#5 step da 1 V
+ODBSET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[1]", 39.2
+#da 38+1.2 V a 38+3.7 V
+#5 step da 0.5V
+
+WAIT seconds, 10
+
+LOOP 5
+   ODBGET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[0]", sipm10um
+   ODBGET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[1]", sipm6x6
+
+   SET description, "Bias voltage scan, muon run, Set 1, CH1"
+   CAT description, $description, ",  Hamamatsu 10um: ", $sipm10um, "V CAEN 18, CH2 Hamamatsu 6x6: ", $sipm6x6, "V"
+
+   ODBSET "/Runinfo/Run description", $description
+
+   TRANSITION start
+   WAIT events, 20000
+   TRANSITION stop
+
+   ODBINC "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[0]", 1
+   ODBINC "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[1]", 0.5
+   WAIT seconds, 10
+ENDLOOP

@@ -1,0 +1,12 @@
+
+
+
+SET description, "Muon beam run, trigger from MiB (plastic), BGO UG11, 0 deg. CH1 3010 - CAEN amp 18; CH2 6050 - CAEN amp 28; CH3 LYSO; CH4 MCP; CH6: trigger"
+ODBSET "/Runinfo/Run description", $description
+
+LOOP 2
+   TRANSITION start
+   WAIT events, 20000
+   TRANSITION stop
+
+ENDLOOP

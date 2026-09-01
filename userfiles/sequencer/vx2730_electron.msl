@@ -1,0 +1,116 @@
+COMMENT vx2730 daq for small crystal with electron beam
+
+#plastic trigger
+trigger_threshold_mV = -60
+
+crystal_name = "BSO SICCAS 50mm"
+
+#set gain
+
+#gain 2.5 = 8dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel8/chgain", 8
+#gain 4 = 12dB1.5 = 8 dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel9/chgain", 8
+
+# configure
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   ODBSET "Digitizer/acqtriggersource", "ITLA"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 2000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 500
+
+   #enable channel in trigger source A
+   ODBSET "Digitizer/itlamask", 0
+ENDODBSUBDIR
+
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings/Channel10"
+   #configure channel itl
+   ODBSET "itlconnect", "ITLA"
+
+   #configure trigger threshold
+   ODBGET "adctovolts", factor
+   ODBSET "triggerthr", $trigger_threshold_mV / ( $factor * 1000)
+   
+ENDODBSUBDIR
+
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel*/chenable", n
+
+LOOP enabled_channel, 0, 4, 5, 6, 7, 8, 9, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $enabled_channel
+
+   ODBSUBDIR $channel_string
+      #enable the channel
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP central_channel, 0, 1, 2, 3
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $central_channel
+
+   ODBSUBDIR $channel_string
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP neg_channel, 4, 5, 6, 7, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $neg_channel
+
+   ODBSUBDIR $channel_string
+      #offset for negative signals
+      ODBSET "dcoffset", 80
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP pos_channel, 8, 9
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $pos_channel
+
+   ODBSUBDIR $channel_string
+      #offset for positive signals
+      ODBSET "dcoffset", 20
+
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "RISE"
+   ENDODBSUBDIR
+ENDLOOP
+
+
+#set angle to 0
+ODBSET "/Equipment/ArdutableEquipment/Variables/Demand", 0
+WAIT seconds 3
+WAIT ODBvalue, "/Equipment/ArdutableEquipment/Variables/State", "!=", "1"
+WAIT seconds 3
+
+SET rundescription, "BSO, two s14170, electron beam, plastic trigger, fontend 18dB, digitizer 8dB"
+
+CAT rundescription, $rundescription, ", ", $crystal_name
+
+ODBSET "/Runinfo/Run description", $rundescription
+
+
+LOOP 1
+   TRANSITION start
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 30000
+   TRANSITION stop
+
+ENDLOOP
+
+
+SUBROUTINE atexit
+      ODBGET /Runinfo/State, state
+      IF $state == 3
+         TRANSITION stop
+      ENDIF
+ENDSUBROUTINE

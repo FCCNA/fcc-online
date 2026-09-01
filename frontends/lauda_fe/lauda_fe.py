@@ -85,7 +85,8 @@ class LaudaEquipment(midas.frontend.EquipmentBase):
 
             
         try:
-            self.ser.write(b'IN_MODE_02\r\n')
+            #self.ser.write(b'IN_MODE_02\r\n')
+            self.ser.write(b'STATUS\r\n')
             cooling_state_string = self.ser.readline().decode()
             cooling_state = 1-float(cooling_state_string)
 
@@ -141,7 +142,7 @@ class LaudaEquipment(midas.frontend.EquipmentBase):
 
             
         try:
-            self.ser.write(b'IN_MODE_02\r\n')
+            self.ser.write(b'STATUS\r\n')#IN_MODE_02\r\n')
             cooling_state_string = self.ser.readline().decode()
             cooling_state = float(cooling_state_string)
 
@@ -149,6 +150,7 @@ class LaudaEquipment(midas.frontend.EquipmentBase):
             self.client.msg("Error reading cooling state: %s" % str(e), is_error = True)
             cooling_state = float('nan')
 
+        tset = setpoint_temperature
         #trigger a feedback to control temperature in the box
         if self.client.odb_get(f'{self.odb_settings_dir}/Feedback'):
 

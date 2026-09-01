@@ -1,0 +1,121 @@
+COMMENT vx2730 daq with OR of channel 8 and 9
+
+trigger_threshold_mV = 8
+
+# configure
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   ODBSET "Digitizer/acqtriggersource", "ITLA"
+   
+   #internal trigger source A
+   ODBSET "Digitizer/itlamainlogic", "OR"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 2000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 500
+
+   #enable channel in trigger source A
+   mask = 768
+   ODBSET "Digitizer/itlamask", $mask
+   
+ENDODBSUBDIR
+
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings/Channel8"
+   #configure channel itl
+   ODBSET "itlconnect", "ITLA"
+   
+   #gain 2.5 = 8dB
+   ODBSET "chgain", 8
+   WAIT seconds 5
+
+   #configure trigger threshold
+   ODBGET "adctovolts", factor
+   ODBSET "triggerthr", $trigger_threshold_mV / ( $factor * 1000)
+   
+ENDODBSUBDIR
+
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings/Channel9"
+   #configure channel itl
+   ODBSET "itlconnect", "ITLA"
+   
+   #gain 4 = 12dB
+   ODBSET "chgain", 8
+   WAIT seconds 5
+
+   #configure trigger threshold
+   ODBGET "adctovolts", factor
+   ODBSET "triggerthr", $trigger_threshold_mV / ( $factor * 1000)
+   
+ENDODBSUBDIR
+
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel*/chenable", n
+
+LOOP enabled_channel, 0, 4, 5, 6, 7, 8, 9, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $enabled_channel
+
+   ODBSUBDIR $channel_string
+      #enable the channel
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP central_channel, 0, 1, 2, 3
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $central_channel
+
+   ODBSUBDIR $channel_string
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP neg_channel, 4, 5, 6, 7, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $neg_channel
+
+   ODBSUBDIR $channel_string
+      #offset for negative signals
+      ODBSET "dcoffset", 80
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP pos_channel, 8, 9
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $pos_channel
+
+   ODBSUBDIR $channel_string
+      #offset for positive signals
+      ODBSET "dcoffset", 20
+
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "RISE"
+   ENDODBSUBDIR
+ENDLOOP
+
+
+SET rundescription, "Cosmics, two s14170, BSO siccas short, OR trigger"
+
+ODBSET "/Runinfo/Run description", $rundescription
+
+LOOP 2
+   TRANSITION start
+
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 30000
+   TRANSITION stop
+
+ENDLOOP
+
+
+SUBROUTINE atexit
+      ODBGET /Runinfo/State, state
+      IF $state == 3
+         TRANSITION stop
+      ENDIF
+ENDSUBROUTINE

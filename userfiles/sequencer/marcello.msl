@@ -1,0 +1,24 @@
+#ODBSET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[0]", 37.5
+#ODBSET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[1]", 39.7
+ODBSET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[0]", 37.5 
+ODBSET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[1]", 41
+
+WAIT seconds, 10
+
+LOOP 11
+   ODBGET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[0]", broadcom
+   ODBGET "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[1]", hamamatsu
+
+   SET description, "Bias voltage scan, dark count, CAEN amp 28, set 1"
+   CAT description, $description, " Broadcom: ", $broadcom, "V", " hamamatsu_3010: ", $hamamatsu, "V"
+
+   ODBSET "/Runinfo/Run description", $description
+
+   TRANSITION start
+   WAIT events, 10000
+   TRANSITION stop
+
+   ODBINC "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[0]", 0.5
+   ODBINC "/Equipment/caen_hv/Settings/Slot 0/VSet (V)[1]", 0.5
+   WAIT seconds, 10
+ENDLOOP

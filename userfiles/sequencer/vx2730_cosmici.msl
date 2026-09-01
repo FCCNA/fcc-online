@@ -1,0 +1,112 @@
+COMMENT vx2730 daq with self trigger
+
+# SiPM 3x3 senza finestra ottica
+trigger_channel = 0
+trigger_threshold_mV = 8
+
+crystal_name = "BSO SICCAS"
+
+
+# configure
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   ODBSET "Digitizer/acqtriggersource", "ITLA"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 2000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 500
+
+   #enable channel in trigger source A
+   SET mask, 2 ^ $trigger_channel
+   ODBSET "Digitizer/itlamask", $mask
+ENDODBSUBDIR
+
+CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $trigger_channel
+
+ODBSUBDIR $channel_string
+   #configure channel itl
+   ODBSET "itlconnect", "ITLA"
+
+   #configure trigger threshold
+   ODBGET "adctovolts", factor
+   ODBSET "triggerthr", $trigger_threshold_mV / ( $factor * 1000)
+   
+ENDODBSUBDIR
+
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel*/chenable", n
+
+LOOP enabled_channel, 0,8
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $enabled_channel
+
+   ODBSUBDIR $channel_string
+      #enable the channel
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP central_channel, 0, 1, 2, 3
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $central_channel
+
+   ODBSUBDIR $channel_string
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP neg_channel, 4, 5, 6, 7, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $neg_channel
+
+   ODBSUBDIR $channel_string
+      #offset for negative signals
+      ODBSET "dcoffset", 80
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP pos_channel, 8, 9
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $pos_channel
+
+   ODBSUBDIR $channel_string
+      #offset for positive signals
+      ODBSET "dcoffset", 10
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "RISE"
+   ENDODBSUBDIR
+ENDLOOP
+
+#scint gain 2.5 = 8dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel8/chgain", 8
+#chere gain 4   = 12dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel9/chgain", 15
+
+   
+SET rundescription, "Studio Cosmici, 18 dB gain CAEN, SENZA finestra ottica su sipm 3x3 ch1, trigger su ch0, HV ch1_0 44V, gain digitizer 18dB_23/02/2026_inizio_15:20_ con telo sulla box"
+CAT rundescription, $rundescription, ", ", $crystal_name
+
+   
+ODBSET "/Runinfo/Run description", $rundescription
+   
+LOOP 1
+   
+   TRANSITION start
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 15000
+   TRANSITION stop
+
+ENDLOOP
+
+
+SUBROUTINE atexit
+      ODBGET /Runinfo/State, state
+      IF $state == 3
+         TRANSITION stop
+      ENDIF
+ENDSUBROUTINE

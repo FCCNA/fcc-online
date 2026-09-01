@@ -1,13 +1,19 @@
 COMMENT vx2730 daq with self trigger
 
 # Beam PMT trigger
-trigger_channel = 0
-trigger_threshold_mV = -200
+#trigger_channel = 0
+#trigger_threshold_mV = -200
 
 # Large plastic trigger
-#trigger_channel = 10
-#trigger_threshold_mV = -60
+trigger_channel = 10
+trigger_threshold_mV = -60
 
+
+#gain 2.5 = 8dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel8/chgain", 18
+#gain 4 = 12dB
+#ODBSET "/Equipment/FeLibFrontend/Settings/Channel9/chgain", 12
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel9/chgain", 18
 
 # configure
 ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
@@ -86,13 +92,7 @@ LOOP pos_channel, 8, 9
    ENDODBSUBDIR
 ENDLOOP
 
-
-#gain 2.5 = 8dB
-ODBSET "/Equipment/FeLibFrontend/Settings/Channel8/chgain", 8
-#gain 2.5 = 8dB
-ODBSET "/Equipment/FeLibFrontend/Settings/Channel9/chgain", 12
-
-LOOP infinite
+LOOP 1
    TRANSITION start
    WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 30000
    TRANSITION stop

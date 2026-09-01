@@ -1,0 +1,8 @@
+LOOP infinite
+   WAIT seconds, 2
+   TRANSITION start
+   WAIT events, 1000
+   TRANSITION stop
+   WAIT seconds, 2
+
+ENDLOOP

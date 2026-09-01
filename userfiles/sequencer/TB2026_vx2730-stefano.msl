@@ -1,0 +1,167 @@
+COMMENT vx2730 daq with self trigger
+
+# ================
+# RUN DESCRIPTION
+# ================
+crystal_name = "BSO Matrix"
+
+SET rundescription, "TB_2026, energy scan with e+ 5GeV, gain ADC 20 dB, HV 43, 43, 40.7, trigger with MM1&MM2&BUSY"
+CAT rundescription, $rundescription, ", ", $crystal_name
+
+ODBSET "/Runinfo/Run description", $rundescription
+
+
+# ========================
+# CONFIGURAZIONE GENERALE
+# ========================
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   ODBSET "Digitizer/acqtriggersource", "TrgIn"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 2000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 500
+ENDODBSUBDIR
+
+# ========================
+# DISABLE ALL CHANNELS
+# ========================
+#ODBSET "/Equipment/FeLibFrontend/Settings/Channel*/chenable", n
+
+# ========================
+# ENABLE Channels
+# ========================
+
+# --- SCINT FRONT (0–8)
+LOOP ch, 1,2,3,4,5,6,7,8,9
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+# --- SCINT REAR (10–18)
+LOOP ch, 11,12,13,14,15,16,17,18,19
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+# --- CHER REAR (19–27)
+LOOP ch, 21,22,23,24,25,26,27,28,29
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+# =============
+# TRIGGER EDGE
+# =============
+
+# scintillazione (front + rear) -> segnali positivi
+LOOP ch, 1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "selftriggeredge", "RISE"
+   ENDODBSUBDIR
+ENDLOOP
+
+# cherenkov -> segnali negativi
+LOOP ch, 21,22,23,24,25,26,27,28,29
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+
+# =======
+# OFFSET
+# =======
+
+# scint (front + rear) -> positivi -> offset basso
+LOOP ch, 1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "dcoffset", 10
+   ENDODBSUBDIR
+ENDLOOP
+
+# cherenkov -> negativi -> offset alto
+LOOP ch, 21,22,23,24,25,26,27,28,29
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "dcoffset", 10
+   ENDODBSUBDIR
+ENDLOOP
+
+# ======
+# GAIN
+# ======
+#N.B. 2.5=8dB,8=18dB
+
+SET gain_scint_front,10
+SET gain_scint_rear, 10
+SET gain_cher_rear, 10
+
+# --- SCINT FRONT
+LOOP ch, 1,2,3,4,5,6,7,8,9
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "chgain", $gain_scint_front
+   ENDODBSUBDIR
+ENDLOOP
+
+# --- SCINT REAR
+LOOP ch, 11,12,13,14,15,16,17,18,19
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "chgain", $gain_scint_rear
+   ENDODBSUBDIR
+ENDLOOP
+
+# --- CHER REAR
+LOOP ch, 21,22,23,24,25,26,27,28,29
+   CAT path, "/Equipment/FeLibFrontend/Settings/Channel", $ch
+   ODBSUBDIR $path
+      ODBSET "chgain", $gain_cher_rear
+   ENDODBSUBDIR
+ENDLOOP
+
+
+# ======================
+# cherenkov counter (Channel 20)
+# ======================
+
+#SET gain_scint_box, 8
+
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings/Channel20"
+   ODBSET "chenable", y
+   ODBSET "dcoffset", 90
+   ODBSET "selftriggeredge", "RISE"
+   #ODBSET "chgain", $gain_scint_box
+ENDODBSUBDIR
+
+
+# =========
+# RUN LOOP
+# =========
+
+LOOP 1
+   TRANSITION start
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 20000
+   TRANSITION stop
+ENDLOOP
+
+
+
+SUBROUTINE atexit
+   ODBGET /Runinfo/State, state
+   IF $state == 3
+      TRANSITION stop
+   ENDIF
+ENDSUBROUTINE

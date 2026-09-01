@@ -1,0 +1,20 @@
+COMMENT vx2730 daq with TRGIN trigger
+
+# configure
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   #ODBSET "Digitizer/acqtriggersource", "TrgIn"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 1000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 100
+ENDODBSUBDIR
+
+LOOP infinite
+   TRANSITION start
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 10000
+   TRANSITION stop
+
+ENDLOOP

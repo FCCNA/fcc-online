@@ -1,0 +1,12 @@
+
+
+
+SET description, "misure con led PLP ch0 sipm 3x3 preamp passivo a gain -  misura fotoni configurazione lenti 1x2 power 15 data 23.01.2025 "
+ODBSET "/Runinfo/Run description", $description
+
+LOOP 1
+   TRANSITION start
+   WAIT events, 30000
+   TRANSITION stop
+
+ENDLOOP

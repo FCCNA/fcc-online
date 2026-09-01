@@ -1,0 +1,113 @@
+COMMENT vx2730 daq with self trigger
+
+# LASER trigger
+#trigger_channel = 0
+#trigger_threshold_mV = -480
+
+crystal_name = "BSO Matrix"
+
+
+# configure
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   ODBSET "Digitizer/acqtriggersource", "TrgIn"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 2000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 500
+
+   #enable channel in trigger source A
+   #SET mask, 2 ^ $trigger_channel
+   #ODBSET "Digitizer/itlamask", $mask
+ENDODBSUBDIR
+
+#CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $trigger_channel
+
+#ODBSUBDIR $channel_string
+   #configure channel itl
+  # ODBSET "itlconnect", "ITLA"
+
+   #configure trigger threshold
+   #ODBGET "adctovolts", factor
+   #ODBSET "triggerthr", $trigger_threshold_mV / ( $factor * 1000)
+   
+#ENDODBSUBDIR
+
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel*/chenable", n
+
+#abilitare i canali che usiamo
+LOOP enabled_channel, 4, 5
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $enabled_channel
+
+   ODBSUBDIR $channel_string
+      #enable the channel
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP central_channel, 0, 1, 2, 3
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $central_channel
+
+   ODBSUBDIR $channel_string
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP neg_channel, 4, 5, 6, 7, 10
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $neg_channel
+
+   ODBSUBDIR $channel_string
+      #offset for negative signals
+      ODBSET "dcoffset", 80
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "FALL"
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP pos_channel, 8, 9
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $pos_channel
+
+   ODBSUBDIR $channel_string
+      #offset for positive signals
+      ODBSET "dcoffset", 10
+      
+      # trigger edge
+      ODBSET "selftriggeredge", "RISE"
+   ENDODBSUBDIR
+ENDLOOP
+
+#scint gain 2.5 = 8dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel4/chgain", 8
+#chere gain 4   = 12dB
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel5/chgain", 8
+
+   
+SET rundescription, "Trigger MM e digitizer con cosmici,solo lettura del cristallo BGO tra le due MM,trigger in su AND due scint veto di 2ms mm freq clock 100 1_04_2026"
+CAT rundescription, $rundescription, ", ", $crystal_name
+
+   
+ODBSET "/Runinfo/Run description", $rundescription
+   
+LOOP 1
+   
+   TRANSITION start
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 20000
+   TRANSITION stop
+
+ENDLOOP
+
+
+SUBROUTINE atexit
+      ODBGET /Runinfo/State, state
+      IF $state == 3
+         TRANSITION stop
+      ENDIF
+ENDSUBROUTINE

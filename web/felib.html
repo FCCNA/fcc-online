@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="midas.css">
+   <script src="controls.js"></script>
+   <script src="midas.js"></script>
+   <script src="mhttpd.js"></script>
+   <script src="mplot.js"></script>
+   <style>
+       .select {
+           padding: 6px;
+           background-color: #E0E0E0;
+       }
+
+       .eheader {
+           width: 100%;
+           font-family: verdana, tahoma, sans-serif;
+       }
+
+       table.eheader {
+           border-collapse: collapse;
+       }
+
+       table.eheader td {
+           border: 1px solid white;
+           padding: 4px;
+       }
+
+       table.data {
+           border: none;
+           border-collapse: collapse;
+       }
+
+       table.data td {
+           border: 1px solid white;
+       }
+
+       table.data th {
+           font-family: verdana, tahoma, sans-serif;
+           background-color: #8BBDFF;
+           color: white;
+           border: 1px solid white;
+           padding: 4px;
+       }
+
+       table.data td {
+           font-family: Courier, monospace;
+           padding: 4px;
+       }
+   </style>
+
+   <script>
+     var plot;
+     var event = null;
+     // create colormap plot with parameters
+     function next() {
+            update();
+          }
+     function callback(rpc) {
+            let e = document.getElementById("status");
+            if (rpc.result) {
+                   let status = rpc.result.status;
+                   if (status === 209) {
+                          e.innerHTML = "Waiting for next event...";
+                        } else {
+                               e.innerHTML =  "No data, status = " + status;
+                             }
+                   return false;
+                 }
+
+            e.innerHTML =  "";
+
+            event = bkToObj(rpc);
+            drawEvent(event, parseInt(document.getElementById("channel_num").value));
+            return true;
+          }
+     function update() {
+            let buffer_name = "SYSTEM";
+            let event_id = 1;
+            let trigger_mask = -1;
+            let get_recent = true;
+            let last_event_header = [];
+            mjsonrpc_call("bm_receive_event", {
+                   "buffer_name": buffer_name,
+                   "event_id": event_id,
+                   "trigger_mask": trigger_mask,
+                   "get_recent": get_recent,
+                   "last_event_header": last_event_header
+                 }, "arraybuffer").then(function (rpc) {
+                        let success = callback(rpc);
+                      }).catch(function (error) {
+                             mjsonrpc_error_alert(error);
+                             if (!success)
+                               update_timer_id = setTimeout('update()', 1000);
+                           });
+          }
+
+     function init(){
+            let param = {
+                   showZScale: true,
+                   nx: 32,
+                   ny: 32,
+                   xMin : -20,
+                   xMax: 20,
+                   yMin: -10,
+                   yMax: 10
+                 };
+            plot = new MPlotGraph(document.getElementById("wfPlot"), param);
+
+            for(let i=0; i<32; i++){
+              document.getElementById("channel_num").add(new Option(i.toString()));
+            }
+          }
+
+     function channelChange(){
+            if(event)
+              drawEvent(event, parseInt(document.getElementById("channel_num").value));
+          }
+
+     function drawEvent(o, channel) {
+            channelBankName = "W0";
+            if(channel < 10) channelBankName += "0";
+            channelBankName += channel.toString();
+
+            document.getElementById("event_header").innerHTML = "Event #" + o.serial_number;
+            for (let index = 0; index < o.bank.length; index++) {
+                   let b = o.bank[index];
+                   if(b.name == channelBankName ){
+
+                          //plot = document.getElementById("wfPlot");
+                          // create some dummy data
+                          let size = b.array.length;
+                          let x = Array.from({length: size})
+                          for(let i=0; i<size; i++) x[i] = i;
+
+                          // display dummy data
+                          plot.setData(0, x, b.array)
+
+                        }
+                 }
+          }
+   </script>
+
+   <title>FeLib online scope</title>
+</head>
+
+<body class="mcss" onload="mhttpd_init('Felib Scope');init()">
+<div id="mheader"></div>
+<div id="msidenav"></div>
+
+<div id="mmain">
+   <table class="mtable" style="width: 100%;">
+      <tr>
+         <td class="mtableheader">Event Plot from digitizer</td>
+      </tr>
+      <tr>
+         <td class="select">
+           <button class="mbutton" onclick="next()">Next event</button>
+            <label for="channel_num">channel:</label>
+            <select id="channel_num" onchange="channelChange()">
+            </select>
+         </td>
+      </tr>
+      <tr>
+         <td id="dump">
+           <div class="mplot" id="wfPlot">
+           </div>
+         </td>
+      </tr>
+      <tr>
+         <td align=center><span id="status"></span></td>
+      </tr>
+      <tr>
+         <td class="mtableheader" id="event_header">Event dump</td>
+      </tr>
+   </table>
+
+
+</div>
+

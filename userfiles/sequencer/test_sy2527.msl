@@ -1,0 +1,2 @@
+ODBGET "/Equipment/caen_SY2527_hv/Settings/Slot 0/V0Set (V)[0]", pippo
+MESSAGE $pippo, 1

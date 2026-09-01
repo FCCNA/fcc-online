@@ -1,0 +1,54 @@
+COMMENT vx2730 daq with self trigger
+
+trigger_channel = 0
+trigger_threshold_mV = -200
+
+# configure
+ODBSUBDIR "/Equipment/FeLibFrontend/Settings"
+   #internal trigger source A
+   ODBSET "Digitizer/acqtriggersource", "ITLA"
+   
+   #number of samples for each event
+   ODBSET "Digitizer/recordlengths", 2000
+
+   #samples before trigger
+   ODBSET "Digitizer/pretriggers", 1000
+
+   #enable channel in trigger source A
+   SET mask, 2 ^ $trigger_channel
+   ODBSET "Digitizer/itlamask", $mask
+ENDODBSUBDIR
+
+CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $trigger_channel
+
+ODBSUBDIR $channel_string
+   #configure channel itl
+   ODBSET "itlconnect", "ITLA"
+
+   #configure trigger threshold
+   ODBGET "adctovolts", factor
+   ODBSET "triggerthr", $trigger_threshold_mV / ( $factor * 1000)
+   
+   # trigger edge
+   ODBSET "selftriggeredge", "FALL"
+   
+ENDODBSUBDIR
+
+ODBSET "/Equipment/FeLibFrontend/Settings/Channel*/chenable", n
+
+LOOP enabled_channel, 0, 1, 4, 5, 6, 7
+
+   CAT channel_string, "/Equipment/FeLibFrontend/Settings/Channel", $enabled_channel
+
+   ODBSUBDIR $channel_string
+      #enable the channel
+      ODBSET "chenable", y
+   ENDODBSUBDIR
+ENDLOOP
+
+LOOP infinite
+   TRANSITION start
+   WAIT ODBvalue, "/Equipment/FeLibFrontend/Statistics/Events sent", ">", 100000
+   TRANSITION stop
+
+ENDLOOP

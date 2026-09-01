@@ -1,0 +1,12 @@
+
+
+
+SET description, "BGO SICCAS + PMT (V = -750V) TRG_thr = -100 mV"
+ODBSET "/Runinfo/Run description", $description
+
+LOOP 5
+   TRANSITION start
+   WAIT events, 200
+   TRANSITION stop
+
+ENDLOOP

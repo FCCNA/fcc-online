@@ -1,0 +1,12 @@
+
+
+
+SET description, " Dark sipm 1 Hamamatsu 6x6 con preamp 2 HV=40.7V Gain 28 e led driver none trigger ch1 12mV data 28.11.2024 "
+ODBSET "/Runinfo/Run description", $description
+
+LOOP 1
+   TRANSITION start
+   WAIT events, 2000
+   TRANSITION stop
+
+ENDLOOP

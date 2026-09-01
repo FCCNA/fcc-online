@@ -1,0 +1,12 @@
+
+
+
+SET description, "box nuova misure con led UV ch0 sipm 3x3, ch1 sipm 6x6 ambe due preamp a gain 28  data 12.12.2024 "
+ODBSET "/Runinfo/Run description", $description
+
+LOOP 1
+   TRANSITION start
+   WAIT events, 30000
+   TRANSITION stop
+
+ENDLOOP

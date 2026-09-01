@@ -1,0 +1,12 @@
+
+
+
+SET description, "box nuova Calibrazione con oscilloscopio sipm 1 Hamamatsu 6x6 con preamp 2 HV=40.7V Gain 18 led driver a 15 data 16.02.2026 "
+ODBSET "/Runinfo/Run description", $description
+
+LOOP 1
+   TRANSITION start
+   WAIT events, 17000
+   TRANSITION stop
+
+ENDLOOP
